@@ -6,7 +6,8 @@
 \usage{
 opencage_forward(placename, key = opencage_key(), bounds = NULL,
   countrycode = NULL, language = NULL, limit = 10,
-  min_confidence = NULL, no_annotations = NULL, no_dedupe = NULL)
+  min_confidence = NULL, no_annotations = FALSE, no_dedupe = FALSE,
+  no_record = FALSE, abbrv = FALSE)
 }
 \arguments{
 \item{placename}{Placename.}
@@ -26,6 +27,10 @@ opencage_forward(placename, key = opencage_key(), bounds = NULL,
 \item{no_annotations}{Logical (default FALSE), when TRUE the output will not contain annotations.}
 
 \item{no_dedupe}{Logical (default FALSE), when TRUE the output will not be deduplicated.}
+
+\item{no_record}{Logical (default FALSE), when TRUE no log entry of the query is created at OpenCage.}
+
+\item{abbrv}{Logical (default FALSE), when TRUE addresses are abbreviated (e.g. C. instead of Calle)}
 }
 \value{
 A list with
@@ -57,4 +62,3 @@ opencage_forward(placename = "Triererstr 15,
 }
 
 }
-

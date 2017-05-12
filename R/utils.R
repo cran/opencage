@@ -29,16 +29,25 @@ opencage_parse <- function(req) {
     results <- NULL
   }
 
+  if(!is.null(temp$rate)){
+    rate_info <- dplyr::tbl_df(data.frame(
+      limit = temp$rate$limit,
+      remaining = temp$rate$remaining,
+      reset = as.POSIXct(temp$rate$reset, origin="1970-01-01")))
+  }else{
+    rate_info <- NULL
+  }
+
+  if(!is.null(results)){
+    results <- dplyr::tbl_df(results)
+  }
 
   list(results = results,
        total_results = no_results,
        time_stamp = as.POSIXct(temp$timestamp$created_unix,
                                origin="1970-01-01"),
-       rate_info = dplyr::tbl_df(data.frame(
-         limit = temp$rate$limit,
-         remaining = temp$rate$remaining,
-         rest = as.POSIXct(temp$rate$reset, origin="1970-01-01")
-       )))
+       rate_info = rate_info
+       )
 }
 
 # base URL for all queries
@@ -66,13 +75,15 @@ opencage_query_check <- function(latitude = NULL,
                                  longitude = NULL,
                                  placename = NULL,
                                  key,
+                                 abbrv,
                                  bounds,
                                  countrycode,
                                  language,
                                  limit,
                                  min_confidence,
                                  no_annotations,
-                                 no_dedupe){
+                                 no_dedupe,
+                                 no_record){
   # check latitude
   if(!is.null(latitude)){
     if (!dplyr::between(latitude, -90, 90)){
@@ -159,10 +170,23 @@ opencage_query_check <- function(latitude = NULL,
     }
   }
 
-  # check no_annotationss
+  # check abbrv
+  if(!is.null(abbrv)){
+    if(!is.logical(abbrv)){
+      stop(call. = FALSE, "abbrv has to be a logical.")
+    }
+  }
+  # check no_annotations
   if(!is.null(no_annotations)){
     if(!is.logical(no_annotations)){
       stop(call. = FALSE, "no_annotations has to be a logical.")
+    }
+  }
+
+  # check no_record
+  if(!is.null(no_record)){
+    if(!is.logical(no_record)){
+      stop(call. = FALSE, "no_record has to be a logical.")
     }
   }
 
