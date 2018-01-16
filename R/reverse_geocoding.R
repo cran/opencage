@@ -1,6 +1,6 @@
 .opencage_reverse <- function(latitude,
                               longitude,
-                              key=opencage_key(),
+                              key = opencage_key(),
                               bounds = NULL,
                               countrycode = NULL,
                               language = NULL,
@@ -9,8 +9,8 @@
                               no_annotations = FALSE,
                               no_dedupe = FALSE,
                               no_record = FALSE,
-                              abbrv = FALSE){
-
+                              abbrv = FALSE,
+                              add_request = TRUE){
 
   # check arguments
   opencage_query_check(latitude = latitude,
@@ -24,12 +24,14 @@
                        no_annotations = no_annotations,
                        no_dedupe = no_dedupe,
                        no_record = no_record,
-                       abbrv = abbrv)
+                       abbrv = abbrv,
+                       add_request = add_request)
 
   no_annotations <- ifelse(is.null(no_annotations), FALSE, no_annotations)
   no_dedupe <- ifelse(is.null(no_dedupe), FALSE, no_dedupe)
   no_record <- ifelse(is.null(no_record), FALSE, no_record)
   abbrv <- ifelse(is.null(abbrv), FALSE, abbrv)
+  add_request <- ifelse(is.null(add_request), TRUE, add_request)
 
 
   # res
@@ -48,7 +50,9 @@
                                          no_record =
                                            ifelse(no_record == TRUE, 1, 0),
                                         abbrv =
-                                          ifelse(abbrv == TRUE, 1, 0)))
+                                          ifelse(abbrv == TRUE, 1, 0),
+                                         add_request =
+                                           ifelse(add_request == TRUE, 1, 0)))
   # check message
   opencage_check(temp)
 
@@ -68,13 +72,14 @@
 #' @param key Your OpenCage key.
 #' @param bounds Provides the geocoder with a hint to the region that the query resides in. This value will restrict the possible results to the supplied region. The bounds parameter should be specified as 4 coordinate points forming the south-west and north-east corners of a bounding box. For example, \code{bounds = c(-0.563160, 51.280430, 0.278970, 51.683979)} (min long, min lat, max long, max lat).
 #' @param countrycode Restricts the results to the given country. The country code is a two letter code as defined by the ISO 3166-1 Alpha 2 standard. E.g. "GB" for the United Kingdom, "FR" for France, "US" for United States.
-#' @param language An IETF format language code (such as "es" for Spanish or "pt-BR" for Brazilian Portuguese). If no language is explicitly specified, we will look for an HTTP Accept-Language header like those sent by a brower and use the first language specified and if none are specified "en" (English) will be assumed.
+#' @param language An IETF format language code (such as "es" for Spanish or "pt-BR" for Brazilian Portuguese). If no language is explicitly specified, we will look for an HTTP Accept-Language header like those sent by a browser and use the first language specified and if none are specified "en" (English) will be assumed.
 #' @param limit How many results should be returned (1-100). Default is 10.
 #' @param min_confidence An integer from 1-10. Only results with at least this confidence will be returned.
 #' @param no_annotations Logical (default FALSE), when TRUE the output will not contain annotations.
 #' @param no_dedupe Logical (default FALSE), when TRUE the output will not be deduplicated.
 #' @param no_record Logical (default FALSE), when TRUE no log entry of the query is created at OpenCage.
 #' @param abbrv Logical (default FALSE), when TRUE addresses are abbreviated (e.g. C. instead of Calle)
+#' @param add_request Logical (default TRUE), when FALSE the query text is removed from the results data frame.
 #'
 #' @details To get an API key to access OpenCage geocoding, register at \url{https://geocoder.opencagedata.com/pricing}. The free API key provides up to 2,500 calls a day. For ease of use, save your API key as an environment variable as described at \url{https://stat545-ubc.github.io/bit003_api-key-env-var.html}.
 #' Both functions of the package will conveniently look for your API key using \code{Sys.getenv("OPENCAGE_KEY")} so if your API key is an environment variable called "OPENCAGE_KEY" you don't need to input it manually.

@@ -7,7 +7,7 @@
 opencage_reverse(latitude, longitude, key = opencage_key(), bounds = NULL,
   countrycode = NULL, language = NULL, limit = 10,
   min_confidence = NULL, no_annotations = FALSE, no_dedupe = FALSE,
-  no_record = FALSE, abbrv = FALSE)
+  no_record = FALSE, abbrv = FALSE, add_request = TRUE)
 }
 \arguments{
 \item{latitude}{Latitude.}
@@ -20,7 +20,7 @@ opencage_reverse(latitude, longitude, key = opencage_key(), bounds = NULL,
 
 \item{countrycode}{Restricts the results to the given country. The country code is a two letter code as defined by the ISO 3166-1 Alpha 2 standard. E.g. "GB" for the United Kingdom, "FR" for France, "US" for United States.}
 
-\item{language}{An IETF format language code (such as "es" for Spanish or "pt-BR" for Brazilian Portuguese). If no language is explicitly specified, we will look for an HTTP Accept-Language header like those sent by a brower and use the first language specified and if none are specified "en" (English) will be assumed.}
+\item{language}{An IETF format language code (such as "es" for Spanish or "pt-BR" for Brazilian Portuguese). If no language is explicitly specified, we will look for an HTTP Accept-Language header like those sent by a browser and use the first language specified and if none are specified "en" (English) will be assumed.}
 
 \item{limit}{How many results should be returned (1-100). Default is 10.}
 
@@ -33,6 +33,8 @@ opencage_reverse(latitude, longitude, key = opencage_key(), bounds = NULL,
 \item{no_record}{Logical (default FALSE), when TRUE no log entry of the query is created at OpenCage.}
 
 \item{abbrv}{Logical (default FALSE), when TRUE addresses are abbreviated (e.g. C. instead of Calle)}
+
+\item{add_request}{Logical (default TRUE), when FALSE the query text is removed from the results data frame.}
 }
 \value{
 A list with
