@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Daniel Possenriede, Jesse Sadler, Maëlle Salmon" />
+
+<meta name="date" content="2021-02-11" />
+
+<title>Customise your query</title>
+
+<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Customise your query</h1>
+<h3 class="subtitle">Get more and better results from OpenCage</h3>
+<h4 class="author">Daniel Possenriede, Jesse Sadler, Maëlle Salmon</h4>
+<h4 class="date">2021-02-11</h4>
+
+
+
+<p>Geocoding is surprisingly hard. Address formats and spellings differ in and between countries; administrative areas on different levels intersect; names, numbers, and boundaries change over time — you name it. The OpenCage API, therefore, supports about a dozen parameters to customise queries. This vignette explains how to use the query parameters with {opencage} to get better geocoding results.</p>
+<div id="multiple-results" class="section level2">
+<h2>Multiple results</h2>
+<p>Forward geocoding typically returns multiple results because many places have the same or similar names.</p>
+<p>By default <code>oc_forward_df()</code> only returns one result: the one defined as the best result by the OpenCage API. To receive more results, modify the <code>limit</code> argument, which specifies the maximum number of results that should be returned. Integer values between 1 and 100 are allowed.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="st">&quot;Berlin&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 4</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename oc_lat oc_lng oc_formatted   </span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;          </span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Berlin      52.5   13.4 Berlin, Germany</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="st">&quot;Berlin&quot;</span>, <span class="at">limit =</span> <span class="dv">5</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 x 4</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename oc_lat oc_lng oc_formatted                                               </span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                                                      </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Berlin      52.5   13.4 Berlin, Germany                                            </span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Berlin      44.5  -71.2 Berlin, New Hampshire, United States of America            </span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Berlin      39.8  -89.9 Berlin, Sangamon County, Illinois, United States of America</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Berlin      41.6  -72.7 Berlin, Connecticut, United States of America</span></span></code></pre></div>
+<p>Reverse geocoding only returns <a href="https://opencagedata.com/api#ranking">at most one result</a>. Therefore, <code>oc_reverse_df()</code> does not support the <code>limit</code> argument.</p>
+<p>OpenCage may sometimes have more than one record of one place. Duplicated records are not returned by default. If you set the <code>no_dedupe</code> argument to <code>TRUE</code>, you will receive duplicated results when available.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="st">&quot;Berlin&quot;</span>, <span class="at">limit =</span> <span class="dv">5</span>, <span class="at">no_dedupe =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 x 4</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename oc_lat oc_lng oc_formatted                                               </span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                                                      </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Berlin      52.5   13.4 Berlin, Germany                                            </span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Berlin      52.5   13.4 Berlin, Germany                                            </span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Berlin      44.5  -71.2 Berlin, New Hampshire, United States of America            </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Berlin      39.8  -89.9 Berlin, Sangamon County, Illinois, United States of America</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 Berlin      41.6  -72.7 Berlin, Connecticut, United States of America</span></span></code></pre></div>
+</div>
+<div id="better-targeted-results" class="section level2">
+<h2>Better targeted results</h2>
+<p>As you can see, place names are often ambiguous. Happily, the OpenCage API has tools to deal with this problem. The <code>countrycode</code>, <code>bounds</code>, and <code>proximity</code> arguments can make the query more precise. <code>min_confidence</code> lets you limit the results to those with a specified confidence score (which is not necessarily the “best” or most “relevant” result, though). These parameters are only relevant and available for forward geocoding.</p>
+<div id="countrycode" class="section level3">
+<h3><code>countrycode</code></h3>
+<p>The <code>countrycode</code> parameter restricts the results to the given country. The country code is a two letter code as defined by the <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2">ISO 3166-1 Alpha 2</a> standard. E.g. “AR” for Argentina, “FR” for France, and “NZ” for the New Zealand.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="at">placename =</span> <span class="st">&quot;Paris&quot;</span>, <span class="at">countrycode =</span> <span class="st">&quot;US&quot;</span>, <span class="at">limit =</span> <span class="dv">5</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 x 4</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename oc_lat oc_lng oc_formatted                                         </span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                                                </span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Paris       33.7  -95.6 Paris, TX 75460, United States of America            </span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Paris       38.2  -84.3 Paris, Kentucky, United States of America            </span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Paris       36.3  -88.3 Paris, TN 38242, United States of America            </span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Paris       39.6  -87.7 Paris, IL 61944, United States of America            </span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 Paris       44.3  -70.5 Paris, Oxford County, Maine, United States of America</span></span></code></pre></div>
+<p>Multiple countrycodes per <code>placename</code> must be wrapped in a list. Here is an example with places called “Paris” in Italy and Portugal.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="at">placename =</span> <span class="st">&quot;Paris&quot;</span>, <span class="at">countrycode =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;IT&quot;</span>, <span class="st">&quot;PT&quot;</span>)), <span class="at">limit =</span> <span class="dv">5</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 x 4</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename oc_lat oc_lng oc_formatted                                                           </span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                                                                  </span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Paris       44.6   7.28 Brossasco, Cuneo, Italy                                                </span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Paris       46.5  10.4  23032 Valfurva, Italy                                                  </span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Paris       37.4  -8.79 8670-320 Odemira, Portugal                                             </span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Paris       43.5  12.1  Paris, Monterchi, Arezzo, Italy                                        </span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 Paris       46.5  11.3  Paris, Via Firenze - Florenzstraße, 56, 39100 Bolzano - Bozen BZ, Italy</span></span></code></pre></div>
+<p>Despite the name, country codes also exist for territories that are not independent states, e.g. Gibraltar (“GI”), Greenland (“GL”), Guadaloupe (“GP”), or Guam (“GU”). You can look up specific country codes with the {<a href="https://cran.r-project.org/package=ISOcodes">ISOcodes</a>} or {<a href="https://vincentarelbundock.github.io/countrycode/">countrycodes</a>} packages or on the <a href="https://www.iso.org/obp/ui/#search/code/">ISO</a> or <a href="https://en.wikipedia.org/wiki/ISO_3166-1">Wikipedia</a> webpages. In fact, you can also look up country codes via OpenCage as well. If you were interested in the country code of Curaçao for example, you could run:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="st">&quot;Curaçao&quot;</span>, <span class="at">no_annotations =</span> <span class="cn">FALSE</span>)[<span class="st">&quot;oc_iso_3166_1_alpha_2&quot;</span>]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 1</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   oc_iso_3166_1_alpha_2</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;                </span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 CW</span></span></code></pre></div>
+</div>
+<div id="bounds" class="section level3">
+<h3><code>bounds</code></h3>
+<p>The <code>bounds</code> parameter restricts the possible results to a defined <a href="https://wiki.openstreetmap.org/wiki/Bounding_Box">bounding box</a>. A bounding box is a named numeric vector with four coordinates specifying its south-west and north-east corners: <code>(xmin, ymin, xmax, ymax)</code>. The bounds parameter can most easily be specified with the <code>oc_bbox()</code> helper. For example, <code>bounds = oc_bbox(-0.56, 51.28, 0.27, 51.68)</code>. OpenCage provides a ‘<a href="https://opencagedata.com/bounds-finder">bounds-finder</a>’ to interactively determine bounds values.</p>
+<p>Below is an example of the use of <code>bounds</code> where the bounding box specifies the the South American continent.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="at">placename =</span> <span class="st">&quot;Paris&quot;</span>, <span class="at">bounds =</span> <span class="fu">oc_bbox</span>(<span class="sc">-</span><span class="dv">97</span>, <span class="sc">-</span><span class="dv">56</span>, <span class="sc">-</span><span class="dv">32</span>, <span class="dv">12</span>), <span class="at">limit =</span> <span class="dv">5</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 x 4</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename oc_lat oc_lng oc_formatted                                                          </span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                                                                 </span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Paris      -6.71  -69.9 Eirunepé, Região Geográfica Intermediária de Tefé, Brazil             </span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Paris      -3.99  -79.2 110108, Loja, Ecuador                                                 </span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Paris     -13.5   -62.5 Canton Motegua, Municipio Baures, Provincia de Iténez, Bolivia        </span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Paris     -23.5   -47.5 Jardim Zezo Miguel, Sorocaba, Região Metropolitana de Sorocaba, Brazil</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 Paris       6.31  -75.6 París, 051052 Bello, ANT, Colombia</span></span></code></pre></div>
+<p>Again, you can also use {opencage} to determine a bounding box for subsequent queries. If you wanted to map the airports on the Hawaiian islands, for example, you could find the appropriate bounding box and then search for the airports:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>hi <span class="ot">&lt;-</span> <span class="fu">oc_forward_df</span>(<span class="at">placename =</span> <span class="st">&quot;Hawaii&quot;</span>, <span class="at">no_annotations =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>hi_bbox <span class="ot">&lt;-</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">oc_bbox</span>(</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    hi<span class="sc">$</span>oc_southwest_lng,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    hi<span class="sc">$</span>oc_southwest_lat,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    hi<span class="sc">$</span>oc_northeast_lng,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    hi<span class="sc">$</span>oc_northeast_lat</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="at">placename =</span> <span class="st">&quot;Airport&quot;</span>, <span class="at">bounds =</span> hi_bbox, <span class="at">limit =</span> <span class="dv">10</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 10 x 4</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    placename oc_lat oc_lng oc_formatted                                                                                                    </span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                                                                                                           </span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 Airport     21.3  -158. Daniel K. Inouye International Airport, Aolele Street, Honolulu, HI 96820, United States of America             </span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 Airport     19.7  -156. Ellison Onizuka Kona International Airport at Keahole, Queen Kaahumanu Highway, Keahole, HI, United States of A~</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 Airport     20.9  -156. Kahului Airport, Airport Access Road, Kahului, HI 96732-3509, United States of America                          </span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 Airport     19.7  -155. Hilo International Airport, Banyan Drive, Hilo, HI 96720, United States of America                              </span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 Airport     21.4  -158. Kaneohe Bay Marine Corp Air Station/Mokapu Point Airport, 6th Street, Honolulu County, HI 96863, United States ~</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 Airport     19.6  -156. Old Kona Airport State Recreation Area, Laniakea, Kailua-Kona, Hawaii, United States of America                 </span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 Airport     21.2  -157. Molokai Airport, Mauna Loa Highway, Maui County, HI 96729, United States of America                             </span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 Airport     20.8  -157. Lanai Airport, Lanai Airport Road, Maui County, HI 96763, United States of America                              </span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 Airport     21.3  -158. Kalaeloa Airport, Midway Street, Kapolei, HI 96862, United States of America                                    </span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 Airport     21.0  -157. Kapalua-West Maui Airport, Honoapiilani Highway, Lahaina, HI 96761, United States of America</span></span></code></pre></div>
+<p>Note that such a query will only give you airports with “Airport” in their name or address, but not necessarily airfields, airstrips, etc. If you are more interested in these kind of features, you might want to take a look at the {<a href="https://docs.ropensci.org/osmdata/">osmdata</a>} package.</p>
+</div>
+<div id="proximity" class="section level3">
+<h3><code>proximity</code></h3>
+<p>The <code>proximity</code> parameter provides OpenCage with a hint to bias results in favour of those closer to the specified location. It is just one of many factors used for ranking results, however, and (some) results may be far away from the location or point passed to the <code>proximity</code> parameter. A point is a named numeric vector of a latitude and longitude coordinate pair in decimal format. The <code>proximity</code> parameter can most easily be specified with the <code>oc_points()</code> helper. For example, <code>proximity = oc_point(38.0, -84.5)</code>, if you happen to already know the coordinates. If not, you can also look them up with {opencage}, of course:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>lx <span class="ot">&lt;-</span> <span class="fu">oc_forward_df</span>(<span class="st">&quot;Lexington, Kentucky&quot;</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>lx_point <span class="ot">&lt;-</span> <span class="fu">oc_points</span>(lx<span class="sc">$</span>oc_lat, lx<span class="sc">$</span>oc_lng)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="at">placename =</span> <span class="st">&quot;Paris&quot;</span>, <span class="at">proximity =</span> lx_point, <span class="at">limit =</span> <span class="dv">5</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 4 x 4</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename oc_lat oc_lng oc_formatted                             </span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                                    </span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Paris       38.2 -84.3  Paris, Kentucky, United States of America</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Paris       48.9   2.35 Paris, France                            </span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Paris       39.6 -87.7  Paris, IL 61944, United States of America</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 Paris       38.8 -85.6  Paris, IN 47230, United States of America</span></span></code></pre></div>
+<p>Note that the French capital is listed before other places in the US, which are closer to the point provided. This illustrates how <code>proximity</code> is only one of many factors influencing the ranking of results.</p>
+</div>
+<div id="confidence" class="section level3">
+<h3>Confidence</h3>
+<p><code>min_confidence</code> — an integer value between 0 and 10 — indicates the precision of the returned result as defined by its geographical extent, i.e. by the extent of the result’s bounding box. When you specify <code>min_confidence</code>, only results with at least the requested confidence will be returned. Thus, in the following example, the French capital is too large to be returned.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="at">placename =</span> <span class="st">&quot;Paris&quot;</span>, <span class="at">min_confidence =</span> <span class="dv">7</span>, <span class="at">limit =</span> <span class="dv">5</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 4</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename oc_lat oc_lng oc_formatted                             </span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                                    </span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Paris       38.2  -84.3 Paris, Kentucky, United States of America</span></span></code></pre></div>
+<p>Note that confidence is not used for the <a href="https://opencagedata.com/api#ranking">ranking of results</a>. It does not tell you which result is more “correct” or “relevant”, nor what type of thing the result is, but rather how small a result is, geographically speaking. See the <a href="https://opencagedata.com/api#confidence">API documentation</a> for details.</p>
+</div>
+</div>
+<div id="retrieve-more-information-from-the-api" class="section level2">
+<h2>Retrieve more information from the API</h2>
+<p>Besides parameters to target your search better, OpenCage offers parameters to receive more or specific types of information from the API.</p>
+<div id="language" class="section level3">
+<h3><code>language</code></h3>
+<p>If you would like to get your results in a specific language, you can pass an <a href="https://en.wikipedia.org/wiki/IETF_language_tag">IETF BCP 47 language tag</a>, such as “tr” for Turkish or “pt-BR” for Brazilian Portuguese, to the <code>language</code> parameter. OpenCage will attempt to return results in that language.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="at">placename =</span> <span class="st">&quot;Munich&quot;</span>, <span class="at">language =</span> <span class="st">&quot;tr&quot;</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 4</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename oc_lat oc_lng oc_formatted           </span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                  </span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Munich      48.1   11.6 Münih, Bavyera, Almanya</span></span></code></pre></div>
+<p>Alternatively, you can specify the “native” tag, in which case OpenCage will attempt to return the response in the “official” language(s) of the location. Keep in mind, however, that some countries have more than one official language or that the official language may not be the one actually used day-to-day.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="at">placename =</span> <span class="st">&quot;Munich&quot;</span>, <span class="at">language =</span> <span class="st">&quot;native&quot;</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 4</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename oc_lat oc_lng oc_formatted                </span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                       </span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Munich      48.1   11.6 München, Bayern, Deutschland</span></span></code></pre></div>
+<p>If the <code>language</code> parameter is set to <code>NULL</code> (which is the default), the tag is not recognized, or OpenCage does not have a record in that language, the results will be returned in English.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="at">placename =</span> <span class="st">&quot;München&quot;</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 4</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename oc_lat oc_lng oc_formatted            </span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                   </span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 München     48.1   11.6 Munich, Bavaria, Germany</span></span></code></pre></div>
+<p>To find the correct language tag for your desired language, you can search for the language on the <a href="https://r12a.github.io/app-subtags/">BCP47 language subtag lookup</a> for example. Note however, that there are some language tags in use on OpenStreetMap, one of OpenCage’s main sources, that do not conform with the IETF BCP 47 standard. For example, OSM uses <a href="https://wiki.openstreetmap.org/w/index.php?title=Multilingual_names#China"><code>zh_pinyin</code></a> instead of <code>zh-Latn-pinyin</code> for <a href="https://en.wikipedia.org/wiki/Pinyin">Hanyu Pinyin</a>. It might, therefore, be helpful to consult the details page of the target country on openstreetmap.org to see which language tags are actually used. In any case, neither the OpenCage API nor the functions in this package will validate the language tags you provide.</p>
+<p>For further details, see <a href="https://opencagedata.com/api#language">OpenCage’s API documentation</a>.</p>
+</div>
+<div id="annotations" class="section level3">
+<h3>Annotations</h3>
+<p>OpenCage supplies additional information about the result location in what it calls <a href="https://opencagedata.com/api#annotations">annotations</a>. Annotations include, among a variety of other types of information, country information, time of sunset and sunrise, <a href="https://en.wikipedia.org/wiki/UN_M49">UN M49</a> codes or the location in different geocoding formats, like <a href="https://en.wikipedia.org/wiki/Maidenhead_Locator_System">Maidenhead</a>, <a href="https://en.wikipedia.org/wiki/Mercator_projection">Mercator projection</a> (<a href="https://epsg.io/3857">EPSG:3857</a>), <a href="https://en.wikipedia.org/wiki/Geohash">geohash</a> or <a href="https://en.wikipedia.org/wiki/What3words">what3words</a>. Some annotations, like the <a href="https://en.wikipedia.org/wiki/Irish_Transverse_Mercator">Irish Transverse Mercator</a> (ITM, <a href="https://epsg.io/2157">EPSG:2157</a>) or the <a href="https://en.wikipedia.org/wiki/Federal_Information_Processing_Standards">Federal Information Processing Standards</a> (FIPS) code will only be shown when appropriate.</p>
+<p>Whether the annotations are shown, is controlled by the <code>no_annotations</code> argument. It is <code>TRUE</code> by default, which means that the output will <em>not</em> contain annotations. (Yes, inverted argument names are confusing, but we just follow OpenCage’s lead here.) When you set <code>no_annotations</code> to <code>FALSE</code>, all columns are returned (i.e. <code>output</code> is implicitly set to <code>&quot;all&quot;</code>). This leads to a results with a lot of columns.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="st">&quot;Dublin&quot;</span>, <span class="at">no_annotations =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 71</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename oc_lat oc_lng oc_confidence oc_formatted oc_mgrs oc_maidenhead oc_callingcode oc_flag oc_geohash oc_qibla oc_wikidata</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;         &lt;int&gt; &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;                  &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;      </span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Dublin      53.3  -6.26             5 Dublin, Ire~ 29UPV8~ IO63ui83sw               353 &quot;\U000~ gc7x9812v~     114. Q1761      </span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 59 more variables: oc_dms_lat &lt;chr&gt;, oc_dms_lng &lt;chr&gt;, oc_itm_easting &lt;chr&gt;, oc_itm_northing &lt;chr&gt;, oc_mercator_x &lt;dbl&gt;,</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   oc_mercator_y &lt;dbl&gt;, oc_osm_edit_url &lt;chr&gt;, oc_osm_note_url &lt;chr&gt;, oc_osm_url &lt;chr&gt;, oc_un_m49_statistical_groupings &lt;list&gt;,</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   oc_un_m49_regions_europe &lt;chr&gt;, oc_un_m49_regions_ie &lt;chr&gt;, oc_un_m49_regions_northern_europe &lt;chr&gt;, oc_un_m49_regions_world &lt;chr&gt;,</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   oc_currency_alternate_symbols &lt;list&gt;, oc_currency_decimal_mark &lt;chr&gt;, oc_currency_html_entity &lt;chr&gt;, oc_currency_iso_code &lt;chr&gt;,</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   oc_currency_iso_numeric &lt;chr&gt;, oc_currency_name &lt;chr&gt;, oc_currency_smallest_denomination &lt;int&gt;, oc_currency_subunit &lt;chr&gt;,</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   oc_currency_subunit_to_unit &lt;int&gt;, oc_currency_symbol &lt;chr&gt;, oc_currency_symbol_first &lt;int&gt;, oc_currency_thousands_separator &lt;chr&gt;,</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   oc_roadinfo_drive_on &lt;chr&gt;, oc_roadinfo_speed_in &lt;chr&gt;, oc_sun_rise_apparent &lt;int&gt;, oc_sun_rise_astronomical &lt;int&gt;,</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   oc_sun_rise_civil &lt;int&gt;, oc_sun_rise_nautical &lt;int&gt;, oc_sun_set_apparent &lt;int&gt;, oc_sun_set_astronomical &lt;int&gt;, oc_sun_set_civil &lt;int&gt;,</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   oc_sun_set_nautical &lt;int&gt;, oc_timezone_name &lt;chr&gt;, oc_timezone_now_in_dst &lt;int&gt;, oc_timezone_offset_sec &lt;int&gt;,</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   oc_timezone_offset_string &lt;chr&gt;, oc_timezone_short_name &lt;chr&gt;, oc_what3words_words &lt;chr&gt;, oc_northeast_lat &lt;dbl&gt;,</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   oc_northeast_lng &lt;dbl&gt;, oc_southwest_lat &lt;dbl&gt;, oc_southwest_lng &lt;dbl&gt;, oc_iso_3166_1_alpha_2 &lt;chr&gt;, oc_iso_3166_1_alpha_3 &lt;chr&gt;,</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   oc_category &lt;chr&gt;, oc_type &lt;chr&gt;, oc_city &lt;chr&gt;, oc_continent &lt;chr&gt;, oc_country &lt;chr&gt;, oc_country_code &lt;chr&gt;, oc_county &lt;chr&gt;,</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   oc_county_code &lt;chr&gt;, oc_political_union &lt;chr&gt;, oc_state &lt;chr&gt;, oc_state_code &lt;chr&gt;</span></span></code></pre></div>
+</div>
+<div id="roadinfo" class="section level3">
+<h3><code>roadinfo</code></h3>
+<p><code>roadinfo</code> indicates whether the geocoder should attempt to match the nearest road (rather than an address) and provide additional road and driving information. It is <code>FALSE</code> by default, which means OpenCage will not attempt to match the nearest road. Some road and driving information is nevertheless provided as part of the annotations (see above), even when <code>roadinfo</code> is set to <code>FALSE</code>.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="at">placename =</span> <span class="fu">c</span>(<span class="st">&quot;Europa Advance Rd&quot;</span>, <span class="st">&quot;Bovoni Rd&quot;</span>), <span class="at">roadinfo =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 x 29</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename oc_lat oc_lng oc_confidence oc_formatted oc_roadinfo_dri~ oc_roadinfo_one~ oc_roadinfo_road oc_roadinfo_roa~ oc_roadinfo_spe~</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;         &lt;int&gt; &lt;chr&gt;        &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;            &lt;chr&gt;           </span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Europa A~   36.1  -5.34             9 Europa Adva~ right            yes              Europa Advance ~ secondary        km/h            </span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Bovoni Rd   18.3 -64.9              9 Bovoni Hill~ left             &lt;NA&gt;             &lt;NA&gt;             &lt;NA&gt;             mph             </span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 19 more variables: oc_roadinfo_surface &lt;chr&gt;, oc_northeast_lat &lt;dbl&gt;, oc_northeast_lng &lt;dbl&gt;, oc_southwest_lat &lt;dbl&gt;,</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   oc_southwest_lng &lt;dbl&gt;, oc_iso_3166_1_alpha_2 &lt;chr&gt;, oc_iso_3166_1_alpha_3 &lt;chr&gt;, oc_category &lt;chr&gt;, oc_type &lt;chr&gt;,</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   oc_continent &lt;chr&gt;, oc_country &lt;chr&gt;, oc_country_code &lt;chr&gt;, oc_postcode &lt;chr&gt;, oc_road &lt;chr&gt;, oc_road_type &lt;chr&gt;, oc_state &lt;chr&gt;,</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   oc_county &lt;chr&gt;, oc_peak &lt;chr&gt;, oc_state_code &lt;chr&gt;</span></span></code></pre></div>
+<p>A <a href="https://blog.opencagedata.com/post/new-optional-parameter-roadinfo">blog post</a> provides more details.</p>
+</div>
+<div id="abbreviated-addresses" class="section level3">
+<h3>Abbreviated addresses</h3>
+<p>The geocoding functions also have an <code>abbr</code> parameter, which is <code>FALSE</code> by default. When it is <code>TRUE</code>, the addresses in the <code>formatted</code> field of the results are abbreviated (e.g. “Main St.” instead of “Main Street”).</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="st">&quot;Wall Street&quot;</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 4</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename   oc_lat oc_lng oc_formatted                                             </span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                                                    </span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Wall Street   40.7  -74.0 Wall Street, New York, NY 10005, United States of America</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="st">&quot;Wall Street&quot;</span>, <span class="at">abbrv =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 4</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename   oc_lat oc_lng oc_formatted                    </span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                           </span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Wall Street   40.7  -74.0 Wall St, New York, NY 10005, USA</span></span></code></pre></div>
+<p>See <a href="https://blog.opencagedata.com/post/160294347883/shrtr-pls">this blog post</a> for more information.</p>
+</div>
+</div>
+<div id="vectorised-arguments" class="section level2">
+<h2>Vectorised arguments</h2>
+<p>All of the function arguments mentioned above are vectorised, so you can send queries like this:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">placename =</span> <span class="fu">c</span>(<span class="st">&quot;New York&quot;</span>, <span class="st">&quot;Rio&quot;</span>, <span class="st">&quot;Tokyo&quot;</span>),</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">language =</span> <span class="fu">c</span>(<span class="st">&quot;es&quot;</span>, <span class="st">&quot;de&quot;</span>, <span class="st">&quot;fr&quot;</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 x 4</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename oc_lat oc_lng oc_formatted                                                     </span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                                                            </span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 New York    40.7  -74.0 Nueva York, Estados Unidos de América                            </span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Rio        -22.9  -43.2 Rio de Janeiro, Região Metropolitana do Rio de Janeiro, Brasilien</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Tokyo       35.7  140.  Tokyo, Japon</span></span></code></pre></div>
+<p>Or geocode place names with country codes in a data frame:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>for_df <span class="ot">&lt;-</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">location =</span> <span class="fu">c</span>(<span class="st">&quot;Golden Gate Bridge&quot;</span>, <span class="st">&quot;Buckingham Palace&quot;</span>, <span class="st">&quot;Eiffel Tower&quot;</span>),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">ccode =</span> <span class="fu">c</span>(<span class="st">&quot;at&quot;</span>, <span class="st">&quot;cg&quot;</span>, <span class="st">&quot;be&quot;</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(for_df, <span class="at">placename =</span> location, <span class="at">countrycode =</span> ccode)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 x 5</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   location           ccode oc_lat oc_lng oc_formatted                                                                              </span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;              &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                                                                                     </span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Golden Gate Bridge at     48.0   15.6  Karer, Golden Gate Bridge, 3180 Gemeinde Lilienfeld, Austria                              </span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Buckingham Palace  cg     -4.80  11.8  Buckingham Palace, Boulevard du Général Charles de Gaulle, Pointe-Noire, Congo-Brazzaville</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Eiffel Tower       be     50.9    4.34 Eiffel Tower, Avenue de Bouchout - Boechoutlaan, 1020 City of Brussels, Belgium</span></span></code></pre></div>
+<p>This also works with <code>oc_reverse_df()</code>, of course.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>rev_df <span class="ot">&lt;-</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">lat =</span> <span class="fu">c</span>(<span class="fl">51.952659</span>, <span class="fl">41.401372</span>),</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">lon =</span> <span class="fu">c</span>(<span class="fl">7.632473</span>, <span class="fl">2.128685</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_reverse_df</span>(rev_df, lat, lon, <span class="at">language =</span> <span class="st">&quot;native&quot;</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 x 3</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     lat   lon oc_formatted                                        </span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;                                               </span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  52.0  7.63 Friedrich-Ebert-Straße 7, 48153 Münster, Deutschland</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  41.4  2.13 Carrer de Calatrava, 68, 08017 Barcelona, España</span></span></code></pre></div>
+</div>
+<div id="further-information" class="section level2">
+<h2>Further information</h2>
+<p>For further information about the output and query parameters, see the <a href="https://opencagedata.com/api">OpenCage API docs</a> and the <a href="https://opencagedata.com/faq">OpenCage FAQ</a>. When building queries, OpenCage’s <a href="https://opencagedata.com/api#bestpractices">best practices</a> can be very useful, as well as their guide to <a href="https://opencagedata.com/guides/how-to-think-about-geocoding-accuracy">geocoding accuracy</a>.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
