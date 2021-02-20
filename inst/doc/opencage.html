@@ -12,7 +12,7 @@
 
 <meta name="author" content="Daniel Possenriede, Jesse Sadler, Maëlle Salmon" />
 
-<meta name="date" content="2021-02-14" />
+<meta name="date" content="2021-02-18" />
 
 <title>Introduction to opencage</title>
 
@@ -134,7 +134,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1 class="title toc-ignore">Introduction to opencage</h1>
 <h3 class="subtitle">Forward and Reverse Geocoding</h3>
 <h4 class="author">Daniel Possenriede, Jesse Sadler, Maëlle Salmon</h4>
-<h4 class="date">2021-02-14</h4>
+<h4 class="date">2021-02-18</h4>
 
 
 
@@ -149,7 +149,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Now we need to ensure that the functions in {opencage} can access your API key. {opencage} will conveniently retrieve your API key if it is saved in the environment variable <code>&quot;OPENCAGE_KEY&quot;</code>. If it is not, <code>oc_config()</code> will help to set that environment variable.</p>
 <p>Do not pass the key directly as a parameter to the function. Doing so risks exposing your API key via your script or your history. There are three safer ways to set your API key instead:</p>
 <ol style="list-style-type: decimal">
-<li><p>Save your API key as an environment variable in <code>.Renviron</code> as described in <a href="https://rstats.wtf/r-startup.html#renviron">What They Forgot to Teach You About R</a> or <a href="https://csgillespie.github.io/efficientR/set-up.html#renviron">Efficient R Programming</a>. From there it will be fetched by all functions that call the OpenCage API. You do not even have to call <code>oc_config()</code> to set your key; you can start geocoding right away. If you have the {<a href="https://usethis.r-lib.org/">usethis</a>} package installed, you can edit your <code>.Renviron</code> with <code>usethis::edit_r_environ()</code>. We strongly recommend storing your API key in the user-level <code>.Renviron</code>, as opposed to the project-level. This makes it less likely you will share sensitive information by mistake.</p></li>
+<li><p>Save your API key as an environment variable in <code>.Renviron</code> as described in <a href="https://rstats.wtf/r-startup.html#renviron">What They Forgot to Teach You About R</a> or <a href="https://csgillespie.github.io/efficientR/set-up.html#renviron">Efficient R Programming</a>. From there it will be fetched by all functions that call the OpenCage API. You do not even have to call <code>oc_config()</code> to set your key; you can start geocoding right away. If you have the {<a href="https://usethis.r-lib.org">usethis</a>} package installed, you can edit your <code>.Renviron</code> with <code>usethis::edit_r_environ()</code>. We strongly recommend storing your API key in the user-level <code>.Renviron</code>, as opposed to the project-level. This makes it less likely you will share sensitive information by mistake.</p></li>
 <li><p>If you use a package like {<a href="https://github.com/r-lib/keyring">keyring</a>} to store your credentials, you can safely pass your key in a script with a function call like <code>oc_config(key = keyring::key_get(&quot;opencage&quot;))</code>.</p></li>
 <li><p>If you call <code>oc_config()</code> in an <code>interactive()</code> session and the <code>OPENCAGE_KEY</code> environment variable is not set, it will prompt you to enter the key in the console.</p></li>
 </ol>
@@ -159,7 +159,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3>Rate limit</h3>
 <p>A rate limit is used to control the rate of requests sent, so legitimate requests do not lead to an unintended Denial of Service attack. The rate limit allowed by the API depends on the OpenCage plan you have and ranges from 1 request/sec for the “Free Trial” plan to 15 requests/sec for the “Medium” or “Large” plans. See <a href="https://opencagedata.com/pricing">opencagedata.com/pricing</a> for details and up-to-date information.</p>
 <p>If you have a “Free Trial” account with OpenCage, you can skip to the next section, because the rate limit is already set correctly for you at 1 request/sec.</p>
-<p>If you have a paid account, you can set the rate limit for the active R session with <code>oc_config(rate_sec = n)</code> where <code>n</code> is the appropriate rate limit. You can set the rate limit persistently across sessions by setting an <code>oc_rate_sec</code> option in your <code>.Rprofile</code>. If you have the {<a href="https://usethis.r-lib.org/">usethis</a>} package installed, you can edit your <code>.Rprofile</code> with <code>usethis::edit_r_profile()</code>.</p>
+<p>If you have a paid account, you can set the rate limit for the active R session with <code>oc_config(rate_sec = n)</code> where <code>n</code> is the appropriate rate limit. You can set the rate limit persistently across sessions by setting an <code>oc_rate_sec</code> option in your <code>.Rprofile</code>. If you have the {<a href="https://usethis.r-lib.org">usethis</a>} package installed, you can edit your <code>.Rprofile</code> with <code>usethis::edit_r_profile()</code>.</p>
 </div>
 <div id="privacy" class="section level3">
 <h3>Privacy</h3>
@@ -199,7 +199,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename               oc_lat oc_lng oc_formatted                                                                     </span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;                    &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                                                                            </span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Palacio de Bellas Artes   19.4 -99.1  Palacio de Bellas Artes, Avenida Juárez, Centro Urbano, 06050 Mexico City, Mexico</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Scala                     45.5   9.19 Teatro alla Scala, Via Giuseppe Verdi, 20121 Milan Milan, Italy                  </span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Scala                     45.5   9.19 Teatro alla Scala, Largo Antonio Ghiringhelli, Milan Milan, Italy                </span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Sydney Opera House       -33.9 151.   Sydney Opera House, 2 Macquarie Street, Sydney NSW 2000, Australia</span></span></code></pre></div>
 <p>By default, <code>oc_forward_df()</code> only returns three results columns: <code>oc_lat</code> (for latitude), <code>oc_lon</code> (for longitude), and <code>oc_formatted</code> (the formatted address). As you can see, the results columns are all prefixed with <code>oc_</code>. If you specify <code>oc_forward_df(output = all)</code>, you will receive all result columns, which are often quite extensive. Which columns you receive exactly depends on the information OpenCage returns for each specific request.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="at">placename =</span> opera, <span class="at">output =</span> <span class="st">&quot;all&quot;</span>)</span>
@@ -250,18 +250,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>OpenCage <a href="https://opencagedata.com/api#caching">allows and supports caching</a>. To minimize the number of requests sent to the API {opencage} uses {<a href="https://github.com/r-lib/memoise">memoise</a>} to cache results inside the active R session.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">oc_reverse</span>(<span class="at">latitude =</span> <span class="dv">10</span>, <span class="at">longitude =</span> <span class="dv">10</span>))</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0.00    0.00    0.81</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0.03    0.00    0.92</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">oc_reverse</span>(<span class="at">latitude =</span> <span class="dv">10</span>, <span class="at">longitude =</span> <span class="dv">10</span>))</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       0       0       0</span></span></code></pre></div>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0.01    0.00    0.02</span></span></code></pre></div>
 <p>To clear the cache of all results either start a new R session or call <code>oc_clear_cache()</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_clear_cache</span>()</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">oc_reverse</span>(<span class="at">latitude =</span> <span class="dv">10</span>, <span class="at">longitude =</span> <span class="dv">10</span>))</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0.03    0.00    0.74</span></span></code></pre></div>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0.00    0.00    0.92</span></span></code></pre></div>
 <p>As you probably know, cache invalidation is one of the harder things to do in computer science. Therefore {opencage} only supports invalidating the whole cache and not individual records at the moment.</p>
 <p>The underlying data at OpenCage is <a href="https://opencagedata.com/faq#general">updated daily</a>.</p>
 </div>
@@ -269,7 +269,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2>Further information</h2>
 <p>OpenCage supports a lot of parameters to either target your search area more specifically or to specify what additional information you need. See the <a href="customise_query.html">“Customise your query”</a> vignette for details.</p>
 <p>Besides <code>oc_forward_df()</code> and <code>oc_reverse_df()</code>, which always return a single tibble, {opencage} has two sibling functions — <code>oc_forward()</code> and <code>oc_reverse()</code> — which can be used to return types of output. Depending on what you specify as the <code>return</code> parameter, <code>oc_forward()</code> and <code>oc_reverse()</code> will return either a list of tibbles (<code>df_list</code>, the default), JSON lists (<code>json_list</code>), GeoJSON lists (<code>geojson_list</code>), or the URL with which the API would be called (<code>url_only</code>). Learn more in the <a href="output_options.html">“Output options”</a> vignette.</p>
-<p>Please report any issues or bugs on <a href="https://github.com/ropensci/opencage/issues">our GitHub repository</a> and post questions on <a href="https://discuss.ropensci.org/">discuss.ropensci.org</a>.</p>
+<p>Please report any issues or bugs on <a href="https://github.com/ropensci/opencage/issues">our GitHub repository</a> and post questions on <a href="https://discuss.ropensci.org">discuss.ropensci.org</a>.</p>
 </div>
 
 

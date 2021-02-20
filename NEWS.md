@@ -1,4 +1,8 @@
-# opencage 0.2.0
+# opencage 0.2.2
+
+* Fixed a test that caused an error on CRAN's Solaris (#131).
+
+# opencage 0.2.1
 
 This is a major rewrite of the {opencage} package. `opencage_forward()` and `opencage_reverse()` have been deprecated and are superseded by `oc_forward()` and `oc_reverse()`, respectively. In addition there are two new functions `oc_forward_df()` and `oc_reverse_df()`, which geocode place names or addresses into geographic coordinates (latitude and longitude) or vice versa, and return a data frame. 
 
@@ -28,6 +32,7 @@ The new features include:
 
 * The column name for `countrycodes` is now `code`, not `Code`. 
 * HTTP error messages are now returned directly from the API and are therefore always up-to-date. The previously used responses in `code_message`, which were stored in {opencage} as external data, have been deleted. For more information on OpenCage's HTTP status codes see https://opencagedata.com/api#codes.
+* Fixed two URLs, one of which was rejected on the v0.2.0 submission.
 
 # opencage 0.1.4
 
