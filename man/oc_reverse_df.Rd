@@ -15,11 +15,11 @@ oc_reverse_df(...)
   bind_cols = TRUE,
   output = c("short", "all"),
   language = NULL,
-  min_confidence = NULL,
   roadinfo = FALSE,
   no_annotations = TRUE,
   no_dedupe = FALSE,
   abbrv = FALSE,
+  address_only = FALSE,
   ...
 )
 
@@ -28,10 +28,10 @@ oc_reverse_df(...)
   longitude,
   output = c("short", "all"),
   language = NULL,
-  min_confidence = NULL,
   no_annotations = TRUE,
   no_dedupe = FALSE,
   abbrv = FALSE,
+  address_only = FALSE,
   ...
 )
 }
@@ -59,13 +59,6 @@ tag, in which case OpenCage will attempt to return the response in the
 (which is the default), the tag is not recognized, or OpenCage does not
 have a record in that language, the results will be returned in English.}
 
-\item{min_confidence}{Numeric vector of integer values, or an unquoted
-variable name of such a vector, between 0 and 10 indicating the precision
-of the returned result as defined by its geographical extent, (i.e. by the
-extent of the result's bounding box). See the \href{https://opencagedata.com/api#confidence}{API documentation} for details. Only
-results with at least the requested confidence will be returned. Default is
-\code{NULL}).}
-
 \item{roadinfo}{Logical vector, or an unquoted variable name of such a
 vector, indicating whether the geocoder should attempt to match the nearest
 road (rather than an address) and provide additional road and driving
@@ -83,6 +76,11 @@ deduplicated.}
 \item{abbrv}{Logical vector, or an unquoted variable name of such a vector.
 Default is \code{FALSE}. When \code{TRUE} addresses in the \code{oc_formatted} variable of
 the results are abbreviated (e.g. "Main St." instead of "Main Street").}
+
+\item{address_only}{Logical vector, or an unquoted variable name of such a
+vector. Default is \code{FALSE}. When \code{TRUE} only the address details are
+returned in the \code{oc_formatted} variable of the results, not the name of a
+point-of-interest should there be one at this address.}
 }
 \value{
 A tibble. Column names coming from the OpenCage API are prefixed with
@@ -93,38 +91,43 @@ Reverse geocoding from latitude and longitude pairs to the names and
 addresses of a location.
 }
 \examples{
-\dontshow{if (oc_key_present() && oc_api_ok()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (oc_key_present() && oc_api_ok()) withAutoprint(\{ # examplesIf}
 
 library(tibble)
-df <- tibble(id = 1:4,
-             lat = c(-36.85007, 47.21864, 53.55034, 34.05369),
-             lng = c(174.7706, -1.554136, 10.000654, -118.242767))
+df <- tibble(
+  id = 1:4,
+  lat = c(-36.85007, 47.21864, 53.55034, 34.05369),
+  lng = c(174.7706, -1.554136, 10.000654, -118.242767)
+)
 
 # Return formatted address of lat/lng values
 oc_reverse_df(df, latitude = lat, longitude = lng)
 
 # Return more detailed information about the locations
-oc_reverse_df(df, latitude = lat, longitude = lng,
-              output = "all")
+oc_reverse_df(df,
+  latitude = lat, longitude = lng,
+  output = "all"
+)
 
 # Return results in a preferred language if possible
-oc_reverse_df(df, latitude = lat, longitude = lng,
-              language = "fr")
+oc_reverse_df(df,
+  latitude = lat, longitude = lng,
+  language = "fr"
+)
 
 # oc_reverse_df accepts unquoted column names for all
 # arguments except bind_cols and output.
 # This makes it possible to build up more detailed queries
 # through the data frame passed to the data argument.
-
 df2 <- add_column(df,
-                  language = c("en", "fr", "de", "en"),
-                  confidence = c(8, 10, 10, 10))
+  language = c("en", "fr", "de", "en")
+)
 
 # Use language column to specify preferred language of results
-# and confidence column to allow different confidence levels
-oc_reverse_df(df2, latitude = lat, longitude = lng,
-              language = language,
-              min_confidence = confidence)
+oc_reverse_df(df2,
+  latitude = lat, longitude = lng,
+  language = language
+)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

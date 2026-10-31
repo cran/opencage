@@ -1,12 +1,24 @@
-## Test oc_process ##
+# Test oc_process() -------------------------------------------------------
+
+test_that("oc_process throws error without a key.", {
+  withr::local_envvar(c("OPENCAGE_KEY" = ""))
+  expect_error(
+    oc_process(
+      placename = "Paris",
+      return = "url_only"
+    ),
+    "An OpenCage API `key` must be provided.",
+    fixed = TRUE
+  )
+})
 
 test_that("oc_process(return = 'url_only') does not reveal key by default.", {
   withr::local_envvar(c("OPENCAGE_KEY" = key_200))
   res <-
-      oc_process(
-        placename = "Paris",
-        return = "url_only"
-      )
+    oc_process(
+      placename = "Paris",
+      return = "url_only"
+    )
   expect_match(res[[1]], "key=OPENCAGE_KEY", fixed = TRUE)
 })
 
@@ -130,7 +142,7 @@ test_that("bounds argument is well taken into account with df_list", {
     return = "df_list"
   )
 
-  expect_equal(res1[[1]][["oc_country"]], "Germany")
+  expect_identical(res1[[1]][["oc_country"]], "Germany")
   expect_true(res2[[1]][[1, "oc_country"]] != "Germany")
 })
 
@@ -214,55 +226,53 @@ test_that("oc_process handles various other arguments.", {
     placename = "Hamburg",
     return = "url_only",
     limit = 1L,
-    min_confidence = NULL,
     no_annotations = FALSE,
     roadinfo = FALSE,
     no_dedupe = FALSE,
     abbrv = FALSE,
+    address_only = FALSE,
     add_request = FALSE
   )
   expect_match(res1[[1]], "&limit=1", fixed = TRUE)
-  expect_false(grepl(pattern = "min_confidence", x = res1[[1]], fixed = TRUE))
   expect_match(res1[[1]], "&no_annotations=0", fixed = TRUE)
   expect_match(res1[[1]], "&roadinfo=0", fixed = TRUE)
   expect_match(res1[[1]], "&no_dedupe=0", fixed = TRUE)
   expect_match(res1[[1]], "&abbrv=0", fixed = TRUE)
+  expect_match(res1[[1]], "&address_only=0", fixed = TRUE)
   expect_match(res1[[1]], "&add_request=0", fixed = TRUE)
 
   res2 <- oc_process(
     placename = "Hamburg",
     return = "url_only",
     limit = 10,
-    min_confidence = 8,
     no_annotations = TRUE,
     roadinfo = TRUE,
     no_dedupe = TRUE,
     abbrv = TRUE,
+    address_only = TRUE,
     add_request = TRUE
   )
   expect_match(res2[[1]], "&limit=10", fixed = TRUE)
-  expect_match(res2[[1]], "&min_confidence=8", fixed = TRUE)
   expect_match(res2[[1]], "&no_annotations=1", fixed = TRUE)
   expect_match(res2[[1]], "&roadinfo=1", fixed = TRUE)
   expect_match(res2[[1]], "&no_dedupe=1", fixed = TRUE)
   expect_match(res2[[1]], "&abbrv=1", fixed = TRUE)
+  expect_match(res2[[1]], "&address_only=1", fixed = TRUE)
   expect_match(res2[[1]], "&add_request=1", fixed = TRUE)
 
   res3 <- oc_process(
     placename = c("Hamburg", "Hamburg"),
     return = "url_only",
     limit = c(10L, 5L),
-    min_confidence = c(8L, 5L),
     no_annotations = c(TRUE, FALSE),
     roadinfo = c(TRUE, FALSE),
     no_dedupe = c(TRUE, FALSE),
     abbrv = c(TRUE, FALSE),
+    address_only = c(TRUE, FALSE),
     add_request = c(TRUE, FALSE)
   )
   expect_match(res3[[1]], "&limit=10", fixed = TRUE)
   expect_match(res3[[2]], "&limit=5", fixed = TRUE)
-  expect_match(res3[[1]], "&min_confidence=8", fixed = TRUE)
-  expect_match(res3[[2]], "&min_confidence=5", fixed = TRUE)
   expect_match(res3[[1]], "&no_annotations=1", fixed = TRUE)
   expect_match(res3[[2]], "&no_annotations=0", fixed = TRUE)
   expect_match(res3[[1]], "&roadinfo=1", fixed = TRUE)
@@ -271,6 +281,8 @@ test_that("oc_process handles various other arguments.", {
   expect_match(res3[[2]], "&no_dedupe=0", fixed = TRUE)
   expect_match(res3[[1]], "&abbrv=1", fixed = TRUE)
   expect_match(res3[[2]], "&abbrv=0", fixed = TRUE)
+  expect_match(res3[[1]], "&address_only=1", fixed = TRUE)
+  expect_match(res3[[2]], "&address_only=0", fixed = TRUE)
   expect_match(res3[[1]], "&add_request=1", fixed = TRUE)
   expect_match(res3[[2]], "&add_request=0", fixed = TRUE)
 })
@@ -278,52 +290,58 @@ test_that("oc_process handles various other arguments.", {
 test_that("arguments that are NULL or NA don't show up in url.", {
   withr::local_envvar(c("OPENCAGE_KEY" = key_200))
   res_null <- oc_process(
-    placename = "Hamburg",
+    placename = "",
     return = "url_only",
     limit = NULL,
     bounds = NULL,
     proximity = NULL,
     language = NULL,
     countrycode = NULL,
-    min_confidence = NULL,
+    roadinfo = NULL,
     no_annotations = NULL,
     no_dedupe = NULL,
     abbrv = NULL,
+    address_only = NULL,
     add_request = NULL
   )
+  expect_match(res_null[[1]], "q=&", perl = TRUE) # contains 'q=' but no query
   expect_match(res_null[[1]], "^((?!limit=).)*$", perl = TRUE)
   expect_match(res_null[[1]], "^((?!bounds=).)*$", perl = TRUE)
   expect_match(res_null[[1]], "^((?!proximity=).)*$", perl = TRUE)
   expect_match(res_null[[1]], "^((?!language=).)*$", perl = TRUE)
   expect_match(res_null[[1]], "^((?!countrycode=).)*$", perl = TRUE)
-  expect_match(res_null[[1]], "^((?!min_confidence=).)*$", perl = TRUE)
   expect_match(res_null[[1]], "^((?!no_annotations=).)*$", perl = TRUE)
+  expect_match(res_null[[1]], "^((?!roadinfo=).)*$", perl = TRUE)
   expect_match(res_null[[1]], "^((?!no_dedupe=).)*$", perl = TRUE)
   expect_match(res_null[[1]], "^((?!abbrv=).)*$", perl = TRUE)
+  expect_match(res_null[[1]], "^((?!address_only=).)*$", perl = TRUE)
   expect_match(res_null[[1]], "^((?!add_request=).)*$", perl = TRUE)
 
   res_na <- oc_process(
-    placename = "Hamburg",
+    placename = NA_character_,
     return = "url_only",
     limit = NA_real_,
     bounds = list(),
     proximity = list(),
     language = NA_character_,
     countrycode = NA_character_,
-    min_confidence = NA,
     no_annotations = NA,
+    roadinfo = NA,
     no_dedupe = NA,
     abbrv = NA,
+    address_only = NA,
     add_request = NA
   )
+  expect_match(res_na[[1]], "^((?!q=).)*$", perl = TRUE)
   expect_match(res_na[[1]], "^((?!limit=).)*$", perl = TRUE)
   expect_match(res_na[[1]], "^((?!bounds=).)*$", perl = TRUE)
   expect_match(res_na[[1]], "^((?!proximity=).)*$", perl = TRUE)
   expect_match(res_na[[1]], "^((?!language=).)*$", perl = TRUE)
   expect_match(res_na[[1]], "^((?!countrycode=).)*$", perl = TRUE)
-  expect_match(res_na[[1]], "^((?!min_confidence=).)*$", perl = TRUE)
   expect_match(res_na[[1]], "^((?!no_annotations=).)*$", perl = TRUE)
+  expect_match(res_na[[1]], "^((?!roadinfo=).)*$", perl = TRUE)
   expect_match(res_na[[1]], "^((?!no_dedupe=).)*$", perl = TRUE)
   expect_match(res_na[[1]], "^((?!abbrv=).)*$", perl = TRUE)
+  expect_match(res_na[[1]], "^((?!address_only=).)*$", perl = TRUE)
   expect_match(res_na[[1]], "^((?!add_request=).)*$", perl = TRUE)
 })

@@ -55,12 +55,8 @@ have a record in that language, the results will be returned in English.}
 of results returned for each \code{placename}. Integer values between 1 and 100
 are allowed. Default is 10.}
 
-\item{min_confidence}{Numeric vector of integer values between 0 and 10
-indicating the precision of the returned result as defined by its
-geographical extent, (i.e. by the extent of the result's bounding box). See
-the \href{https://opencagedata.com/api#confidence}{API documentation} for
-details. Only results with at least the requested confidence will be
-returned. Default is \code{NULL}.}
+\item{min_confidence}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}} \code{min_confidence} is
+no longer supported by the OpenCage API.}
 
 \item{no_annotations}{Logical vector indicating whether additional
 information about the result location should be returned. \code{TRUE} by
@@ -95,12 +91,12 @@ at which the number of remaining calls will be reset.
 }
 }
 \description{
-\ifelse{html}{\figure{lifecycle-soft-deprecated.svg}{options: alt='Soft-deprecated lifecycle'}}{\strong{Soft-deprecated}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
-Soft deprecated: use \code{oc_forward} or \code{oc_forward_df} for forward geocoding.
+Deprecated: use \code{oc_forward} or \code{oc_forward_df} for forward geocoding.
 }
 \examples{
-\dontshow{if (oc_key_present() && oc_api_ok()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (oc_key_present() && oc_api_ok()) withAutoprint(\{ # examplesIf}
 opencage_forward(placename = "Sarzeau")
 opencage_forward(placename = "Islington, London")
 opencage_forward(placename = "Triererstr 15,

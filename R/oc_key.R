@@ -11,7 +11,8 @@ oc_check_key <- function(key) {
     stop(
       "An OpenCage API `key` must be provided.\n",
       "See help(oc_config)",
-      call. = FALSE)
+      call. = FALSE
+    )
   } else if (!is.character(key)) {
     stop("The OpenCage API `key` must be a character vector.", call. = FALSE)
   } else if (length(key) > 1) {
@@ -21,7 +22,7 @@ oc_check_key <- function(key) {
     )
   } else if (!identical(nchar(key), 32L)) {
     stop(
-      "The OpenCage API key must be a 32 character long, alphanumeric string.\n", # nolint
+      "The OpenCage API key must be a 32 character long, alphanumeric string.\n", # nolint: line_length_linter.
       "See <https://opencagedata.com/api#forward>",
       call. = FALSE
     )
@@ -46,7 +47,7 @@ oc_mask_key <- function(string) {
       replacement = "OPENCAGE_KEY"
     )
   } else {
-    return(string)
+    string
   }
 }
 

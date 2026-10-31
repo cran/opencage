@@ -9,11 +9,11 @@ oc_reverse(
   longitude,
   return = c("df_list", "json_list", "geojson_list", "url_only"),
   language = NULL,
-  min_confidence = NULL,
   no_annotations = TRUE,
   roadinfo = FALSE,
   no_dedupe = FALSE,
   abbrv = FALSE,
+  address_only = FALSE,
   add_request = FALSE,
   ...
 )
@@ -34,13 +34,6 @@ tag, in which case OpenCage will attempt to return the response in the
 (which is the default), the tag is not recognized, or OpenCage does not
 have a record in that language, the results will be returned in English.}
 
-\item{min_confidence}{Numeric vector of integer values between 0 and 10
-indicating the precision of the returned result as defined by its
-geographical extent, (i.e. by the extent of the result's bounding box). See
-the \href{https://opencagedata.com/api#confidence}{API documentation} for
-details. Only results with at least the requested confidence will be
-returned. Default is \code{NULL}.}
-
 \item{no_annotations}{Logical vector indicating whether additional
 information about the result location should be returned. \code{TRUE} by
 default, which means that the results will not contain annotations.}
@@ -55,6 +48,10 @@ will not be deduplicated.}
 \item{abbrv}{Logical vector (default \code{FALSE}), when \code{TRUE} addresses in the
 \code{formatted} field of the results are abbreviated (e.g. "Main St." instead
 of "Main Street").}
+
+\item{address_only}{Logical vector (default \code{FALSE}), when \code{TRUE} only the
+address details are returned in the \code{formatted} field of the results, not
+the name of a point-of-interest should there be one at this address.}
 
 \item{add_request}{Logical vector (default \code{FALSE}) indicating whether the
 request is returned again with the results. If the \code{return} value is a
@@ -84,7 +81,7 @@ Reverse geocoding from numeric vectors of latitude and longitude pairs to
 the names and addresses of a location.
 }
 \examples{
-\dontshow{if (oc_key_present() && oc_api_ok()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (oc_key_present() && oc_api_ok()) withAutoprint(\{ # examplesIf}
 
 # Reverse geocode a single location
 oc_reverse(latitude = -36.85007, longitude = 174.7706)
@@ -96,12 +93,16 @@ lng <- c(-1.554136, 10.000654, -118.242767)
 oc_reverse(latitude = lat, longitude = lng)
 
 # Return results in a preferred language if possible
-oc_reverse(latitude = lat, longitude = lng,
-           language = "fr")
+oc_reverse(
+  latitude = lat, longitude = lng,
+  language = "fr"
+)
 
 # Return results as a json list
-oc_reverse(latitude = lat, longitude = lng,
-           return = "json_list")
+oc_reverse(
+  latitude = lat, longitude = lng,
+  return = "json_list"
+)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

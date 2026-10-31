@@ -21,9 +21,7 @@ opencage_reverse(
 )
 }
 \arguments{
-\item{latitude}{Numeric vectors of latitude and longitude values.}
-
-\item{longitude}{Numeric vectors of latitude and longitude values.}
+\item{latitude, longitude}{Numeric vectors of latitude and longitude values.}
 
 \item{key}{Your OpenCage API key as a character vector of length one. By
 default, \code{\link[=opencage_key]{opencage_key()}} will attempt to retrieve the key from the
@@ -44,12 +42,8 @@ have a record in that language, the results will be returned in English.}
 \item{limit}{How many results should be returned (1-100), ignored for reverse
 geocoding.}
 
-\item{min_confidence}{Numeric vector of integer values between 0 and 10
-indicating the precision of the returned result as defined by its
-geographical extent, (i.e. by the extent of the result's bounding box). See
-the \href{https://opencagedata.com/api#confidence}{API documentation} for
-details. Only results with at least the requested confidence will be
-returned. Default is \code{NULL}.}
+\item{min_confidence}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}} \code{min_confidence} is
+no longer supported by the OpenCage API.}
 
 \item{no_annotations}{Logical vector indicating whether additional
 information about the result location should be returned. \code{TRUE} by
@@ -84,12 +78,12 @@ at which the number of remaining calls will be reset.
 }
 }
 \description{
-\ifelse{html}{\figure{lifecycle-soft-deprecated.svg}{options: alt='Soft-deprecated lifecycle'}}{\strong{Soft-deprecated}}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 
-Soft deprecated: use \code{oc_reverse} or \code{oc_reverse_df} for reverse geocoding.
+Deprecated: use \code{oc_reverse} or \code{oc_reverse_df} for reverse geocoding.
 }
 \examples{
-\dontshow{if (oc_key_present() && oc_api_ok()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (oc_key_present() && oc_api_ok()) withAutoprint(\{ # examplesIf}
 
 opencage_reverse(
   latitude = 0, longitude = 0,

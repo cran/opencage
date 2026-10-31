@@ -79,14 +79,13 @@ oc_bbox.numeric <- function(xmin, ymin, xmax, ymax, ...) {
     oc_check_bbox(xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax)
     structure(
       c(xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax),
-      crs =
-        structure(
-          list(
-            epsg = 4326L,
-            proj4string = "+proj=longlat +datum=WGS84 +no_defs"
-          ),
-          class = "crs"
+      crs = structure(
+        list(
+          epsg = 4326L,
+          proj4string = "+proj=longlat +datum=WGS84 +no_defs"
         ),
+        class = "crs"
+      ),
       class = "bbox"
     )
   }
@@ -95,16 +94,18 @@ oc_bbox.numeric <- function(xmin, ymin, xmax, ymax, ...) {
 
 #' @name oc_bbox
 #' @export
-oc_bbox.data.frame <- function(data, xmin, ymin, xmax, ymax, ...) { # nolint - see lintr issue #223
+oc_bbox.data.frame <- function(data, xmin, ymin, xmax, ymax, ...) {
   xmin <- rlang::enquo(xmin)
   ymin <- rlang::enquo(ymin)
   xmax <- rlang::enquo(xmax)
   ymax <- rlang::enquo(ymax)
 
-  oc_bbox(xmin = rlang::eval_tidy(xmin, data = data),
-          ymin = rlang::eval_tidy(ymin, data = data),
-          xmax = rlang::eval_tidy(xmax, data = data),
-          ymax = rlang::eval_tidy(ymax, data = data))
+  oc_bbox(
+    xmin = rlang::eval_tidy(xmin, data = data),
+    ymin = rlang::eval_tidy(ymin, data = data),
+    xmax = rlang::eval_tidy(xmax, data = data),
+    ymax = rlang::eval_tidy(ymax, data = data)
+  )
 }
 
 #' @name oc_bbox
@@ -122,27 +123,25 @@ oc_bbox.bbox <- function(bbox, ...) {
   list(bbox)
 }
 
-# check bbox
+#' Check whether a bounding box has valid longitude and latitude values
+#'
+#' @param xmin numeric minimum longitude
+#' @param ymin numeric minimum latitude
+#' @param xmax numeric maximum longitude
+#' @param ymax numeric maximum latitude
+#'
+#' @noRd
+
 oc_check_bbox <- function(xmin, ymin, xmax, ymax) {
-  bnds <- c(xmin, ymin, xmax, ymax)
-  if (anyNA(bnds)) {
+  if (anyNA(c(xmin, ymin, xmax, ymax))) {
     stop("Every `bbox` element must be non-missing.", call. = FALSE)
   }
-  if (!all(is.numeric(bnds))) {
-    stop("Every `bbox` must be a numeric vector.", call. = FALSE)
-  }
-  if (!dplyr::between(xmin, -180, 180)) {
-    stop("Every `xmin` must be between -180 and 180.", call. = FALSE)
-  }
-  if (!dplyr::between(ymin, -90, 90)) {
-    stop("Every `ymin` must be between -90 and 90.", call. = FALSE)
-  }
-  if (!dplyr::between(xmax, -180, 180)) {
-    stop("Every `xmax` must be between -180 and 180.", call. = FALSE)
-  }
-  if (!dplyr::between(ymax, -90, 90)) {
-    stop("Every `ymax` must be between -90 and 90.", call. = FALSE)
-  }
+
+  oc_check_between(xmin, -180, 180)
+  oc_check_between(xmax, -180, 180)
+  oc_check_between(ymin, -90, 90)
+  oc_check_between(ymax, -90, 90)
+
   if (xmin > xmax) {
     stop("`xmin` must always be smaller than `xmax`", call. = FALSE)
   }

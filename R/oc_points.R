@@ -45,7 +45,8 @@ oc_points <- function(...) UseMethod("oc_points")
 oc_points.default <- function(x, ...) {
   stop(
     "Can't create a list of points from an object of class `",
-    class(x)[[1]], "`.",
+    class(x)[[1]],
+    "`.",
     call. = FALSE
   )
 }
@@ -62,7 +63,7 @@ oc_points.numeric <- function(latitude, longitude, ...) {
 
 #' @name oc_points
 #' @export
-oc_points.data.frame <- function(data, latitude, longitude, ...) { # nolint - see lintr issue #223
+oc_points.data.frame <- function(data, latitude, longitude, ...) {
   latitude <- rlang::enquo(latitude)
   longitude <- rlang::enquo(longitude)
 
@@ -72,19 +73,17 @@ oc_points.data.frame <- function(data, latitude, longitude, ...) { # nolint - se
   )
 }
 
-# check points
+#' Check whether a point has valid latitude and longitude values
+#'
+#' @param latitude numeric latitude value to check
+#' @param longitude numeric longitude value to check
+#'
+#' @noRd
+
 oc_check_point <- function(latitude, longitude) {
-  pnt <- c(latitude, longitude)
-  if (anyNA(pnt)) {
+  if (anyNA(c(latitude, longitude))) {
     stop("Every `point` element must be non-missing.", call. = FALSE)
   }
-  if (!all(is.numeric(pnt))) {
-    stop("Every `point` must be a numeric vector.", call. = FALSE)
-  }
-  if (!dplyr::between(latitude, -90, 90)) {
-    stop("Every `latitude` must be between -90 and 90.", call. = FALSE)
-  }
-  if (!dplyr::between(longitude, -180, 180)) {
-    stop("Every `longitude` must be between -180 and 180.", call. = FALSE)
-  }
+  oc_check_between(latitude, -90, 90)
+  oc_check_between(longitude, -180, 180)
 }

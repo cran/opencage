@@ -12,11 +12,11 @@ oc_forward(
   countrycode = NULL,
   language = NULL,
   limit = 10L,
-  min_confidence = NULL,
   no_annotations = TRUE,
   roadinfo = FALSE,
   no_dedupe = FALSE,
   abbrv = FALSE,
+  address_only = FALSE,
   add_request = FALSE,
   ...
 )
@@ -64,13 +64,6 @@ have a record in that language, the results will be returned in English.}
 of results returned for each \code{placename}. Integer values between 1 and 100
 are allowed. Default is 10.}
 
-\item{min_confidence}{Numeric vector of integer values between 0 and 10
-indicating the precision of the returned result as defined by its
-geographical extent, (i.e. by the extent of the result's bounding box). See
-the \href{https://opencagedata.com/api#confidence}{API documentation} for
-details. Only results with at least the requested confidence will be
-returned. Default is \code{NULL}.}
-
 \item{no_annotations}{Logical vector indicating whether additional
 information about the result location should be returned. \code{TRUE} by
 default, which means that the results will not contain annotations.}
@@ -85,6 +78,10 @@ will not be deduplicated.}
 \item{abbrv}{Logical vector (default \code{FALSE}), when \code{TRUE} addresses in the
 \code{formatted} field of the results are abbreviated (e.g. "Main St." instead
 of "Main Street").}
+
+\item{address_only}{Logical vector (default \code{FALSE}), when \code{TRUE} only the
+address details are returned in the \code{formatted} field of the results, not
+the name of a point-of-interest should there be one at this address.}
 
 \item{add_request}{Logical vector (default \code{FALSE}) indicating whether the
 request is returned again with the results. If the \code{return} value is a
@@ -114,7 +111,7 @@ Forward geocoding from a character vector of location names to latitude and
 longitude tuples.
 }
 \examples{
-\dontshow{if (oc_key_present() && oc_api_ok()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (oc_key_present() && oc_api_ok()) withAutoprint(\{ # examplesIf}
 
 # Geocode a single location, an address in this case
 oc_forward(placename = "Triererstr 15, 99432, Weimar, Deutschland")
@@ -125,31 +122,40 @@ oc_forward(placename = locations)
 
 # Use bounding box to help return accurate results
 # for each placename
-bounds <- oc_bbox(xmin = c(-2, 9, -119),
-                  ymin = c(47, 53, 34),
-                  xmax = c(0, 10, -117),
-                  ymax = c(48, 54, 35))
+bounds <- oc_bbox(
+  xmin = c(-2, 9, -119),
+  ymin = c(47, 53, 34),
+  xmax = c(0, 10, -117),
+  ymax = c(48, 54, 35)
+)
 oc_forward(placename = locations, bounds = bounds)
 
 # Another way to help specify the desired results
 # is with country codes.
-oc_forward(placename = locations,
-           countrycode = c("ca", "us", "co"))
+oc_forward(
+  placename = locations,
+  countrycode = c("ca", "us", "co")
+)
 
 # With multiple countrycodes per placename
-oc_forward(placename = locations,
-           countrycode = list(c("fr", "ca") , c("de", "us"), c("us", "co"))
-           )
+oc_forward(
+  placename = locations,
+  countrycode = list(c("fr", "ca"), c("de", "us"), c("us", "co"))
+)
 
 # Return results in a preferred language if possible
-oc_forward(placename = c("Brugge", "Mechelen", "Antwerp"),
-           language = "fr")
+oc_forward(
+  placename = c("Brugge", "Mechelen", "Antwerp"),
+  language = "fr"
+)
 
 # Limit the number of results per placename and return json_list
-oc_forward(placename = locations,
-           bounds = bounds,
-           limit = 1,
-           return = "json_list")
+oc_forward(
+  placename = locations,
+  bounds = bounds,
+  limit = 1,
+  return = "json_list"
+)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

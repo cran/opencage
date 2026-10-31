@@ -18,11 +18,11 @@ oc_forward_df(...)
   countrycode = NULL,
   language = NULL,
   limit = 1L,
-  min_confidence = NULL,
   no_annotations = TRUE,
   roadinfo = FALSE,
   no_dedupe = FALSE,
   abbrv = FALSE,
+  address_only = FALSE,
   ...
 )
 
@@ -34,11 +34,11 @@ oc_forward_df(...)
   countrycode = NULL,
   language = NULL,
   limit = 1L,
-  min_confidence = NULL,
   no_annotations = TRUE,
   roadinfo = FALSE,
   no_dedupe = FALSE,
   abbrv = FALSE,
+  address_only = FALSE,
   ...
 )
 }
@@ -93,13 +93,6 @@ of such a vector, to determine the maximum number of results returned for
 each \code{placename}. Integer values between 1 and 100 are allowed. Default is
 1.}
 
-\item{min_confidence}{Numeric vector of integer values, or an unquoted
-variable name of such a vector, between 0 and 10 indicating the precision
-of the returned result as defined by its geographical extent, (i.e. by the
-extent of the result's bounding box). See the \href{https://opencagedata.com/api#confidence}{API documentation} for details. Only
-results with at least the requested confidence will be returned. Default is
-\code{NULL}).}
-
 \item{no_annotations}{Logical vector, or an unquoted variable name of such a
 vector, indicating whether additional information about the result location
 should be returned. \code{TRUE} by default, which means that the results will
@@ -117,6 +110,11 @@ deduplicated.}
 \item{abbrv}{Logical vector, or an unquoted variable name of such a vector.
 Default is \code{FALSE}. When \code{TRUE} addresses in the \code{oc_formatted} variable of
 the results are abbreviated (e.g. "Main St." instead of "Main Street").}
+
+\item{address_only}{Logical vector, or an unquoted variable name of such a
+vector. Default is \code{FALSE}. When \code{TRUE} only the address details are
+returned in the \code{oc_formatted} variable of the results, not the name of a
+point-of-interest should there be one at this address.}
 }
 \value{
 A tibble. Column names coming from the OpenCage API are prefixed with
@@ -127,11 +125,13 @@ Forward geocoding from a column or vector of location names to latitude and
 longitude tuples.
 }
 \examples{
-\dontshow{if (oc_key_present() && oc_api_ok()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (oc_key_present() && oc_api_ok()) withAutoprint(\{ # examplesIf}
 
 library(tibble)
-df <- tibble(id = 1:3,
-             locations = c("Nantes", "Hamburg", "Los Angeles"))
+df <- tibble(
+  id = 1:3,
+  locations = c("Nantes", "Hamburg", "Los Angeles")
+)
 
 # Return lat, lng, and formatted address
 oc_forward_df(df, placename = locations)
@@ -146,8 +146,10 @@ oc_forward_df(df, placename = locations, bind_cols = FALSE)
 oc_forward_df(df, placename = locations, limit = 5)
 
 # Restrict results to a given bounding box
-oc_forward_df(df, placename = locations,
-              bounds = oc_bbox(-5, 45, 15, 55))
+oc_forward_df(df,
+  placename = locations,
+  bounds = oc_bbox(-5, 45, 15, 55)
+)
 
 # oc_forward_df accepts unquoted column names for all
 # arguments except bind_cols and output.
@@ -155,27 +157,36 @@ oc_forward_df(df, placename = locations,
 # through the data frame passed to the data argument.
 
 df2 <- add_column(df,
-  bounds = oc_bbox(xmin = c(-2, 9, -119),
-                   ymin = c(47, 53, 34),
-                   xmax = c(0, 10, -117),
-                   ymax = c(48, 54, 35)),
+  bounds = oc_bbox(
+    xmin = c(-2, 9, -119),
+    ymin = c(47, 53, 34),
+    xmax = c(0, 10, -117),
+    ymax = c(48, 54, 35)
+  ),
   limit = 1:3,
   countrycode = c("ca", "us", "co"),
-  language = c("fr", "de", "en"))
+  language = c("fr", "de", "en")
+)
 
 # Use the bounds column to help return accurate results and
 # language column to specify preferred language of results
-oc_forward_df(df2, placename = locations,
-              bounds = bounds,
-              language = language)
+oc_forward_df(df2,
+  placename = locations,
+  bounds = bounds,
+  language = language
+)
 
 # Different limit of results for each placename
-oc_forward_df(df2, placename = locations,
-              limit = limit)
+oc_forward_df(df2,
+  placename = locations,
+  limit = limit
+)
 
 # Specify the desired results by the countrycode column
-oc_forward_df(df2, placename = locations,
-              countrycode = countrycode)
+oc_forward_df(df2,
+  placename = locations,
+  countrycode = countrycode
+)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

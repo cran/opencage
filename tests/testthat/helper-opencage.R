@@ -1,20 +1,84 @@
-# keys from https://opencagedata.com/api#codes or
-# https://github.com/OpenCageData/opencagedata-misc-docs/blob/master/library-guidelines.md # nolint
+# test keys ---------------------------------------------------------------
+# https://opencagedata.com/api#testingkeys
+
 key_200 <- "6d0e711d72d74daeb2b0bfd2a5cdfdba" # always returns a 200 response
 key_402 <- "4372eff77b8343cebfc843eb4da4ddc4" # always returns a 402 responce
 key_403 <- "2e10e5e828262eb243ec0b54681d699a" # always returns a 403 responce
 key_429 <- "d6d0f0065f4348a4bdfe4587ba02714b" # always returns a 429 responce
 
-# skip if API offline
+
+# skip if API offline -----------------------------------------------------
+
 skip_if_oc_offline <- function(host = "api.opencagedata.com") {
   testthat::skip_if_offline(host = host)
 }
 
-# skip if API key is missing
+
+# skip if API key is missing ----------------------------------------------
+
 skip_if_no_key <- function() {
   testthat::skip_if_not(
     condition = oc_key_present(),
-    # re message see https://github.com/r-lib/testthat/issues/1247
     message = "OpenCage API key is missing"
   )
+}
+
+# test data ---------------------------------------------------------------
+
+## forward -----------------------------------------------------------------
+
+oc_locs <- function() c("Brest", "Flensburg", "Los Angeles")
+
+oc_fw1 <- function() tibble::tibble(id = 1:3, loc = oc_locs())
+
+oc_fw2 <- function() {
+  tibble::add_column(
+    oc_fw1(),
+    bounds = oc_bbox(
+      xmin = c(17, -98, -73),
+      ymin = c(49, 43, -38),
+      xmax = c(18, -90, -71),
+      ymax = c(50, 49, -36)
+    ),
+    proximity = oc_points(
+      latitude = c(49.3, 46, -37),
+      longitude = c(17.4, -95, -72)
+    ),
+    countrycode = c("cz", "us", "cl"),
+    language = c("de", "fr", "ja"),
+    limit = 1:3,
+    annotation = c(FALSE, TRUE, TRUE),
+    abbrv = c(FALSE, FALSE, TRUE),
+    address_only = c(TRUE, FALSE, FALSE)
+  )
+}
+
+oc_fw3 <- function() {
+  tibble::tibble(
+    id = 1:3,
+    loc = c("Brest", "Elbphilharmonie Hamburg", "Los Angeles City Hall"),
+    roadinfo = c(FALSE, TRUE, TRUE)
+  )
+}
+
+## reverse -----------------------------------------------------------------
+
+oc_lat1 <- function() c(52.087106, 53.55033, 34.05369)
+oc_lng1 <- function() c(4.297312, 9.9925658, -118.242767)
+
+oc_rev1 <- function() tibble::tibble(id = 1:3, lat = oc_lat1(), lng = oc_lng1())
+
+oc_rev2 <- function() {
+  tibble::add_column(
+    oc_rev1(),
+    language = c("en", "fr", "ja"),
+    annotation = c(FALSE, TRUE, TRUE),
+    roadinfo = c(FALSE, TRUE, TRUE),
+    abbrv = c(FALSE, FALSE, TRUE),
+    address_only = c(TRUE, TRUE, FALSE)
+  )
+}
+
+oc_rev3 <- function() {
+  tibble::add_row(oc_rev2(), id = 4, lat = 25, lng = 36)
 }

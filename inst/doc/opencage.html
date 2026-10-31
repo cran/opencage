@@ -10,29 +10,49 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<meta name="author" content="Daniel Possenriede, Jesse Sadler, Maëlle Salmon" />
 
-<meta name="date" content="2021-02-18" />
 
 <title>Introduction to opencage</title>
 
-<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
@@ -44,55 +64,54 @@ pre > code.sourceCode { white-space: pre-wrap; }
 pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
-  { counter-reset: source-line 0; }
+{ counter-reset: source-line 0; }
 pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
+{ position: relative; left: -4em; counter-increment: source-line; }
 pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
 div.sourceCode
-  {   }
+{ }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -101,13 +120,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -119,7 +145,187 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -133,143 +339,579 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <h1 class="title toc-ignore">Introduction to opencage</h1>
 <h3 class="subtitle">Forward and Reverse Geocoding</h3>
-<h4 class="author">Daniel Possenriede, Jesse Sadler, Maëlle Salmon</h4>
-<h4 class="date">2021-02-18</h4>
 
 
 
-<p>Geocoding is the process of converting place names or addresses into geographic coordinates – like latitude and longitude – or vice versa. With {opencage} you can geocode using the OpenCage API, either from place name to longitude and latitude (forward geocoding) or from longitude and latitude to the name and address of a location (reverse geocoding).</p>
-<p>This vignette covers the setup process for working with {opencage} and basic workflows for both forward and reverse geocoding. Make sure to also check out “<a href="customise_query.html">Customise your query</a>” if you want a deeper dive into customizing the various parameters available through the OpenCage API. The “<a href="output_options.html">Output options</a>” vignette shows additional workflows by modifying the form in which the geocoding results are returned.</p>
+<p>Geocoding is the process of converting place names or addresses into
+geographic coordinates – like latitude and longitude – or vice versa.
+With {opencage} you can geocode using the OpenCage API, either from
+place name to longitude and latitude (forward geocoding) or from
+longitude and latitude to the name and address of a location (reverse
+geocoding).</p>
+<p>This vignette covers the setup process for working with {opencage}
+and basic workflows for both forward and reverse geocoding. Make sure to
+also check out “<a href="customise_query.html">Customise your query</a>”
+if you want a deeper dive into customizing the various parameters
+available through the OpenCage API. The “<a href="output_options.html">Output options</a>” vignette shows additional
+workflows by modifying the form in which the geocoding results are
+returned.</p>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
-<p>Before you can use the {opencage} package and query the OpenCage API you need to first register with OpenCage. Additionally, you may want to set a rate limit (if you have a paid <a href="https://opencagedata.com/pricing">OpenCage plan</a>), and you might want to prevent OpenCage from storing the content of your queries. In other words, you need to setup {opencage}, so let’s go through the process.</p>
+<p>Before you can use the {opencage} package and query the OpenCage API
+you need to first register with OpenCage. Additionally, you may want to
+set a rate limit (if you have a paid <a href="https://opencagedata.com/pricing">OpenCage plan</a>), and you
+might want to prevent OpenCage from storing the content of your queries.
+In other words, you need to setup {opencage}, so let’s go through the
+process.</p>
 <div id="authentication" class="section level3">
 <h3>Authentication</h3>
-<p>To use the package and authenticate yourself with the OpenCage API, you will need to register at <a href="https://opencagedata.com/users/sign_up">opencagedata.com/users/sign_up</a> to get an API key. The “Free Trial” plan provides up to 2,500 API requests a day. There are paid plans available, if you need to run more API requests. After you have registered, you can generate an API key with the <a href="https://opencagedata.com/dashboard#api-keys">OpenCage dashboard</a>.</p>
-<p>Now we need to ensure that the functions in {opencage} can access your API key. {opencage} will conveniently retrieve your API key if it is saved in the environment variable <code>&quot;OPENCAGE_KEY&quot;</code>. If it is not, <code>oc_config()</code> will help to set that environment variable.</p>
-<p>Do not pass the key directly as a parameter to the function. Doing so risks exposing your API key via your script or your history. There are three safer ways to set your API key instead:</p>
+<p>To use the package and authenticate yourself with the OpenCage API,
+you will need to register at <a href="https://opencagedata.com/users/sign_up">opencagedata.com/users/sign_up</a>
+to get an API key. The “Free Trial” plan provides up to 2,500 API
+requests a day. There are paid plans available, if you need to run more
+API requests. After you have registered, you can generate an API key
+with the <a href="https://opencagedata.com/dashboard#api-keys">OpenCage
+dashboard</a>.</p>
+<p>Now we need to ensure that the functions in {opencage} can access
+your API key. {opencage} will conveniently retrieve your API key if it
+is saved in the environment variable <code>&quot;OPENCAGE_KEY&quot;</code>. If it
+is not, <code>oc_config()</code> will help to set that environment
+variable.</p>
+<p>Do not pass the key directly as a parameter to the function. Doing so
+risks exposing your API key via your script or your history. There are
+three safer ways to set your API key instead:</p>
 <ol style="list-style-type: decimal">
-<li><p>Save your API key as an environment variable in <code>.Renviron</code> as described in <a href="https://rstats.wtf/r-startup.html#renviron">What They Forgot to Teach You About R</a> or <a href="https://csgillespie.github.io/efficientR/set-up.html#renviron">Efficient R Programming</a>. From there it will be fetched by all functions that call the OpenCage API. You do not even have to call <code>oc_config()</code> to set your key; you can start geocoding right away. If you have the {<a href="https://usethis.r-lib.org">usethis</a>} package installed, you can edit your <code>.Renviron</code> with <code>usethis::edit_r_environ()</code>. We strongly recommend storing your API key in the user-level <code>.Renviron</code>, as opposed to the project-level. This makes it less likely you will share sensitive information by mistake.</p></li>
-<li><p>If you use a package like {<a href="https://github.com/r-lib/keyring">keyring</a>} to store your credentials, you can safely pass your key in a script with a function call like <code>oc_config(key = keyring::key_get(&quot;opencage&quot;))</code>.</p></li>
-<li><p>If you call <code>oc_config()</code> in an <code>interactive()</code> session and the <code>OPENCAGE_KEY</code> environment variable is not set, it will prompt you to enter the key in the console.</p></li>
+<li><p>Save your API key as an environment variable in
+<code>.Renviron</code> as described in <a href="https://rstats.wtf/r-startup.html#renviron">What They Forgot to
+Teach You About R</a> or <a href="https://csgillespie.github.io/efficientR/set-up.html#renviron">Efficient
+R Programming</a>. From there it will be fetched by all functions that
+call the OpenCage API. You do not even have to call
+<code>oc_config()</code> to set your key; you can start geocoding right
+away. If you have the {<a href="https://usethis.r-lib.org">usethis</a>}
+package installed, you can edit your <code>.Renviron</code> with
+<code>usethis::edit_r_environ()</code>. We strongly recommend storing
+your API key in the user-level <code>.Renviron</code>, as opposed to the
+project-level. This makes it less likely you will share sensitive
+information by mistake.</p></li>
+<li><p>If you use a package like {<a href="https://github.com/r-lib/keyring">keyring</a>} to store your
+credentials, you can safely pass your key in a script with a function
+call like
+<code>oc_config(key = keyring::key_get(&quot;opencage&quot;))</code>.</p></li>
+<li><p>If you call <code>oc_config()</code> in an
+<code>interactive()</code> session and the <code>OPENCAGE_KEY</code>
+environment variable is not set, it will prompt you to enter the key in
+the console.</p></li>
 </ol>
-<p>Whatever method you choose, keep your API key secret. OpenCage also features <a href="https://opencagedata.com/guides/how-to-protect-your-api-key">best practices for keeping your API key safe</a>.</p>
+<p>Whatever method you choose, keep your API key secret. OpenCage also
+features <a href="https://opencagedata.com/guides/how-to-protect-your-api-key">best
+practices for keeping your API key safe</a>.</p>
 </div>
 <div id="rate-limit" class="section level3">
 <h3>Rate limit</h3>
-<p>A rate limit is used to control the rate of requests sent, so legitimate requests do not lead to an unintended Denial of Service attack. The rate limit allowed by the API depends on the OpenCage plan you have and ranges from 1 request/sec for the “Free Trial” plan to 15 requests/sec for the “Medium” or “Large” plans. See <a href="https://opencagedata.com/pricing">opencagedata.com/pricing</a> for details and up-to-date information.</p>
-<p>If you have a “Free Trial” account with OpenCage, you can skip to the next section, because the rate limit is already set correctly for you at 1 request/sec.</p>
-<p>If you have a paid account, you can set the rate limit for the active R session with <code>oc_config(rate_sec = n)</code> where <code>n</code> is the appropriate rate limit. You can set the rate limit persistently across sessions by setting an <code>oc_rate_sec</code> option in your <code>.Rprofile</code>. If you have the {<a href="https://usethis.r-lib.org">usethis</a>} package installed, you can edit your <code>.Rprofile</code> with <code>usethis::edit_r_profile()</code>.</p>
+<p>A rate limit is used to control the rate of requests sent, so
+legitimate requests do not lead to an unintended Denial of Service
+attack. The rate limit allowed by the API depends on the OpenCage plan
+you have and ranges from 1 request/sec for the “Free Trial” plan to 40
+requests/sec for “Large” plan. See <a href="https://opencagedata.com/pricing">opencagedata.com/pricing</a> for
+details and up-to-date information.</p>
+<p>If you have a “Free Trial” account with OpenCage, you can skip to the
+next section, because the rate limit is already set correctly for you at
+1 request/sec.</p>
+<p>If you have a paid account, you can set the rate limit for the active
+R session with <code>oc_config(rate_sec = n)</code> where <code>n</code>
+is the appropriate rate limit. You can set the rate limit persistently
+across sessions by setting an <code>oc_rate_sec</code> option in your
+<code>.Rprofile</code>. If you have the {<a href="https://usethis.r-lib.org">usethis</a>} package installed, you can
+edit your <code>.Rprofile</code> with
+<code>usethis::edit_r_profile()</code>.</p>
 </div>
 <div id="privacy" class="section level3">
 <h3>Privacy</h3>
-<p>By default, OpenCage will store your queries on its server logs and will cache the forward geocoding requests on their side. They do this to speed up response times and to be able to debug errors and improve their service. Logs are automatically deleted after six months according to OpenCage’s <a href="https://opencagedata.com/gdpr">page on data protection and GDPR</a>.</p>
-<p>If you have concerns about privacy and want OpenCage to have no record of your query, i.e. the place name or latitude and longitude coordinates you want to geocode, you can set a <code>no_record</code> parameter to <code>TRUE</code>, which tells the API to not log nor cache the queries. OpenCage still records that you made a request, but not the specific queries you made.</p>
-<p><code>oc_config(no_record = TRUE)</code> sets an <code>oc_no_record</code> option for the active R session, so it will be used for all subsequent OpenCage queries. You can set the <code>oc_no_record</code> option persistently across sessions in your <code>.Rprofile</code>.</p>
-<p>For more information on OpenCage’s policies on privacy and data protection see the Legal section in <a href="https://opencagedata.com/faq#legal">their FAQs</a>, their <a href="https://opencagedata.com/gdpr">GDPR page</a>, and, for the <code>no_record</code> parameter specifically, see the relevant <a href="https://blog.opencagedata.com/post/145602604628/more-privacy-with-norecord-parameter">blog post</a>.</p>
-<p>For increased privacy, {opencage} sets <code>no_record</code> to <code>TRUE</code>, by default. Please note, however, that  always caches the data it receives from the OpenCage API locally, but only for as long as your R session is alive (see below).</p>
+<p>By default, OpenCage will store your queries on its server logs and
+will cache the forward geocoding requests on their side. They do this to
+speed up response times and to be able to debug errors and improve their
+service. Logs are automatically deleted after six months according to
+OpenCage’s <a href="https://opencagedata.com/gdpr">page on data
+protection and GDPR</a>.</p>
+<p>If you have concerns about privacy and want OpenCage to have no
+record of your query, i.e. the place name or latitude and longitude
+coordinates you want to geocode, you can set a <code>no_record</code>
+parameter to <code>TRUE</code>, which tells the API to not log nor cache
+the queries. OpenCage still records that you made a request, but not the
+specific queries you made.</p>
+<p><code>oc_config(no_record = TRUE)</code> sets an
+<code>oc_no_record</code> option for the active R session, so it will be
+used for all subsequent OpenCage queries. You can set the
+<code>oc_no_record</code> option persistently across sessions in your
+<code>.Rprofile</code>.</p>
+<p>For more information on OpenCage’s policies on privacy and data
+protection see the Legal section in <a href="https://opencagedata.com/faq#legal">their FAQs</a>, their <a href="https://opencagedata.com/gdpr">GDPR page</a>, and, for the
+<code>no_record</code> parameter specifically, see the relevant <a href="https://blog.opencagedata.com/post/145602604628/more-privacy-with-norecord-parameter">blog
+post</a>.</p>
+<p>For increased privacy, {opencage} sets <code>no_record</code> to
+<code>TRUE</code>, by default. Please note, however, that {opencage}
+always caches the data it receives from the OpenCage API locally, but
+only for as long as your R session is alive (see below).</p>
 </div>
 <div id="dont-show-api-key" class="section level3">
 <h3>(Don’t) show API key</h3>
-<p><code>oc_config()</code> has another argument, <code>show_key</code>. This is only used for debugging and we will explain it in more detail in <code>vignette(&quot;output_options&quot;)</code>. For now suffice it to say that your OpenCage API key will not be shown in any {opencage} output, unless you change this setting.</p>
+<p><code>oc_config()</code> has another argument, <code>show_key</code>.
+This is only used for debugging and we will explain it in more detail in
+<code>vignette(&quot;output_options&quot;)</code>. For now suffice it to say that
+your OpenCage API key will not be shown in any {opencage} output, unless
+you change this setting.</p>
 </div>
 <div id="altogether-now" class="section level3">
 <h3>Altogether now</h3>
-<p>In sum, if you want to set your API key with {keyring}, set the rate limit to 10 (only do this if you have a paid account, please!), and do not want OpenCage to have records of your queries, you would configure {opencage} for the active session like this:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;opencage&quot;</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_config</span>(</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">key =</span> keyring<span class="sc">::</span><span class="fu">key_get</span>(<span class="st">&quot;opencage&quot;</span>),</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">rate_sec =</span> <span class="dv">10</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">no_record =</span> <span class="cn">TRUE</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>In sum, if you want to set your API key with {keyring}, set the rate
+limit to 10 (only do this if you have a paid account, please!), and do
+not want OpenCage to have records of your queries, you would configure
+{opencage} for the active session like this:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;opencage&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">oc_config</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  <span class="at">key =</span> keyring<span class="sc">::</span><span class="fu">key_get</span>(<span class="st">&quot;opencage&quot;</span>),</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>  <span class="at">rate_sec =</span> <span class="dv">10</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="at">no_record =</span> <span class="cn">TRUE</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>)</span></code></pre></div>
 </div>
 </div>
 <div id="forward-geocoding" class="section level2">
 <h2>Forward geocoding</h2>
-<p>Now you can start to geocode. Forward geocoding is from location name(s) to latitude and longitude tuple(s).</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="at">placename =</span> <span class="st">&quot;Sarzeau&quot;</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 4</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename oc_lat oc_lng oc_formatted         </span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                </span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Sarzeau     47.5  -2.76 56370 Sarzeau, France</span></span></code></pre></div>
-<p>All geocoding functions are vectorised, i.e. you can geocode multiple locations with one function call. Note that behind the scenes the requests are still sent to the API one-by-one.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>opera <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Palacio de Bellas Artes&quot;</span>, <span class="st">&quot;Scala&quot;</span>, <span class="st">&quot;Sydney Opera House&quot;</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="at">placename =</span> opera)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 x 4</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename               oc_lat oc_lng oc_formatted                                                                     </span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;                    &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                                                                            </span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Palacio de Bellas Artes   19.4 -99.1  Palacio de Bellas Artes, Avenida Juárez, Centro Urbano, 06050 Mexico City, Mexico</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Scala                     45.5   9.19 Teatro alla Scala, Largo Antonio Ghiringhelli, Milan Milan, Italy                </span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Sydney Opera House       -33.9 151.   Sydney Opera House, 2 Macquarie Street, Sydney NSW 2000, Australia</span></span></code></pre></div>
-<p>By default, <code>oc_forward_df()</code> only returns three results columns: <code>oc_lat</code> (for latitude), <code>oc_lon</code> (for longitude), and <code>oc_formatted</code> (the formatted address). As you can see, the results columns are all prefixed with <code>oc_</code>. If you specify <code>oc_forward_df(output = all)</code>, you will receive all result columns, which are often quite extensive. Which columns you receive exactly depends on the information OpenCage returns for each specific request.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="at">placename =</span> opera, <span class="at">output =</span> <span class="st">&quot;all&quot;</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 x 30</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   placename oc_lat oc_lng oc_confidence oc_formatted oc_northeast_lat oc_northeast_lng oc_southwest_lat oc_southwest_lng oc_iso_3166_1_a~</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;         &lt;int&gt; &lt;chr&gt;                   &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt; &lt;chr&gt;           </span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Palacio ~   19.4 -99.1              9 Palacio de ~             19.4           -99.1              19.4           -99.1  MX              </span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Scala       45.5   9.19             9 Teatro alla~             45.5             9.19             45.5             9.19 IT              </span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Sydney O~  -33.9 151.               9 Sydney Oper~            -33.9           151.              -33.9           151.   AU              </span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 20 more variables: oc_iso_3166_1_alpha_3 &lt;chr&gt;, oc_category &lt;chr&gt;, oc_type &lt;chr&gt;, oc_city &lt;chr&gt;, oc_continent &lt;chr&gt;,</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   oc_country &lt;chr&gt;, oc_country_code &lt;chr&gt;, oc_museum &lt;chr&gt;, oc_neighbourhood &lt;chr&gt;, oc_postcode &lt;chr&gt;, oc_road &lt;chr&gt;,</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   oc_attraction &lt;chr&gt;, oc_county &lt;chr&gt;, oc_political_union &lt;chr&gt;, oc_state &lt;chr&gt;, oc_suburb &lt;chr&gt;, oc_arts_centre &lt;chr&gt;,</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   oc_house_number &lt;chr&gt;, oc_municipality &lt;chr&gt;, oc_state_code &lt;chr&gt;</span></span></code></pre></div>
-<p>You can also pass a data frame to <code>oc_forward_df()</code>. By default the results columns are added to the input data frame, which is useful for keeping information associated with the place names that are in separate columns. If you want a data frame with only the geocoding results, set <code>bind_cols = FALSE</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>concert_df <span class="ot">&lt;-</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">location =</span> <span class="fu">c</span>(<span class="st">&quot;Elbphilharmonie&quot;</span>, <span class="st">&quot;Concertgebouw&quot;</span>, <span class="st">&quot;Suntory Hall&quot;</span>))</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="at">data =</span> concert_df, <span class="at">placename =</span> location)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 x 4</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   location        oc_lat oc_lng oc_formatted                                                                 </span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;            &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                                                                        </span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Elbphilharmonie   53.5   9.98 Elbe Philharmonic Hall, Platz der Deutschen Einheit 1, 20457 Hamburg, Germany</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Concertgebouw     52.4   4.88 Concertgebouw, Concertgebouwplein 2, 1071 LN Amsterdam, Netherlands          </span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Suntory Hall      35.7 140.   Suntory Hall, Karayan Plaza, Azabu, Minato, Japan</span></span></code></pre></div>
+<p>Now you can start to geocode. Forward geocoding is from location
+name(s) to latitude and longitude tuple(s).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="at">placename =</span> <span class="st">&quot;Sarzeau&quot;</span>)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">placename</th>
+<th align="right">oc_lat</th>
+<th align="right">oc_lng</th>
+<th align="left">oc_formatted</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Sarzeau</td>
+<td align="right">47.52752</td>
+<td align="right">-2.768454</td>
+<td align="left">56370 Sarzeau, France</td>
+</tr>
+</tbody>
+</table>
+<p>All geocoding functions are vectorised, i.e. you can geocode multiple
+locations with one function call. Note that behind the scenes the
+requests are still sent to the API one-by-one.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>opera <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Palacio de Bellas Artes&quot;</span>, <span class="st">&quot;Scala&quot;</span>, <span class="st">&quot;Sydney Opera House&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="at">placename =</span> opera)</span></code></pre></div>
+<table>
+<colgroup>
+<col width="19%" />
+<col width="8%" />
+<col width="8%" />
+<col width="63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">placename</th>
+<th align="right">oc_lat</th>
+<th align="right">oc_lng</th>
+<th align="left">oc_formatted</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Palacio de Bellas Artes</td>
+<td align="right">19.43550</td>
+<td align="right">-99.14126</td>
+<td align="left">Palacio de Bellas Artes, Avenida Juárez, Roma, 06050
+Mexico City, CMX, Mexico</td>
+</tr>
+<tr class="even">
+<td align="left">Scala</td>
+<td align="right">40.65361</td>
+<td align="right">14.60779</td>
+<td align="left">84010 Scala SA, Italy</td>
+</tr>
+<tr class="odd">
+<td align="left">Sydney Opera House</td>
+<td align="right">-33.85720</td>
+<td align="right">151.21512</td>
+<td align="left">Sydney Opera House, 2 Macquarie Street, Sydney NSW
+2000, Australia</td>
+</tr>
+</tbody>
+</table>
+<p>By default, <code>oc_forward_df()</code> only returns three results
+columns: <code>oc_lat</code> (for latitude), <code>oc_lon</code> (for
+longitude), and <code>oc_formatted</code> (the formatted address). As
+you can see, the results columns are all prefixed with <code>oc_</code>.
+If you specify <code>oc_forward_df(output = all)</code>, you will
+receive all result columns, which are often quite extensive. Which
+columns you receive exactly depends on the information OpenCage returns
+for each specific request.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="at">placename =</span> opera, <span class="at">output =</span> <span class="st">&quot;all&quot;</span>)</span></code></pre></div>
+<table style="width:100%;">
+<colgroup>
+<col width="4%" />
+<col width="1%" />
+<col width="1%" />
+<col width="2%" />
+<col width="13%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="3%" />
+<col width="3%" />
+<col width="2%" />
+<col width="3%" />
+<col width="3%" />
+<col width="2%" />
+<col width="1%" />
+<col width="4%" />
+<col width="2%" />
+<col width="2%" />
+<col width="1%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="1%" />
+<col width="1%" />
+<col width="2%" />
+<col width="3%" />
+<col width="1%" />
+<col width="3%" />
+<col width="2%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">placename</th>
+<th align="right">oc_lat</th>
+<th align="right">oc_lng</th>
+<th align="right">oc_confidence</th>
+<th align="left">oc_formatted</th>
+<th align="right">oc_northeast_lat</th>
+<th align="right">oc_northeast_lng</th>
+<th align="right">oc_southwest_lat</th>
+<th align="right">oc_southwest_lng</th>
+<th align="left">oc_iso_3166_1_alpha_2</th>
+<th align="left">oc_iso_3166_1_alpha_3</th>
+<th align="left">oc_iso_3166_2</th>
+<th align="left">oc_category</th>
+<th align="left">oc_normalized_city</th>
+<th align="left">oc_type</th>
+<th align="left">oc_borough</th>
+<th align="left">oc_building</th>
+<th align="left">oc_city</th>
+<th align="left">oc_continent</th>
+<th align="left">oc_country</th>
+<th align="left">oc_country_code</th>
+<th align="left">oc_neighbourhood</th>
+<th align="left">oc_postcode</th>
+<th align="left">oc_road</th>
+<th align="left">oc_state</th>
+<th align="left">oc_state_code</th>
+<th align="left">oc_suburb</th>
+<th align="left">oc_county</th>
+<th align="left">oc_county_code</th>
+<th align="left">oc_political_union</th>
+<th align="left">oc_village</th>
+<th align="left">oc_arts_centre</th>
+<th align="left">oc_house_number</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Palacio de Bellas Artes</td>
+<td align="right">19.43550</td>
+<td align="right">-99.14126</td>
+<td align="right">10</td>
+<td align="left">Palacio de Bellas Artes, Avenida Juárez, Roma, 06050
+Mexico City, CMX, Mexico</td>
+<td align="right">19.43598</td>
+<td align="right">-99.14091</td>
+<td align="right">19.43497</td>
+<td align="right">-99.14166</td>
+<td align="left">MX</td>
+<td align="left">MEX</td>
+<td align="left">MX-CMX</td>
+<td align="left">building</td>
+<td align="left">Mexico City</td>
+<td align="left">building</td>
+<td align="left">Cuauhtémoc</td>
+<td align="left">Palacio de Bellas Artes</td>
+<td align="left">Mexico City</td>
+<td align="left">North America</td>
+<td align="left">Mexico</td>
+<td align="left">mx</td>
+<td align="left">Centro</td>
+<td align="left">06050</td>
+<td align="left">Avenida Juárez</td>
+<td align="left">Mexico City</td>
+<td align="left">CMX</td>
+<td align="left">Roma</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Scala</td>
+<td align="right">40.65361</td>
+<td align="right">14.60779</td>
+<td align="right">7</td>
+<td align="left">84010 Scala SA, Italy</td>
+<td align="right">40.68811</td>
+<td align="right">14.61181</td>
+<td align="right">40.63575</td>
+<td align="right">14.55518</td>
+<td align="left">IT</td>
+<td align="left">ITA</td>
+<td align="left">IT-72, IT-SA</td>
+<td align="left">place</td>
+<td align="left">Scala</td>
+<td align="left">village</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Europe</td>
+<td align="left">Italy</td>
+<td align="left">it</td>
+<td align="left">NA</td>
+<td align="left">84010</td>
+<td align="left">NA</td>
+<td align="left">Campania</td>
+<td align="left">CAM</td>
+<td align="left">NA</td>
+<td align="left">Salerno</td>
+<td align="left">SA</td>
+<td align="left">European Union</td>
+<td align="left">Scala</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Sydney Opera House</td>
+<td align="right">-33.85720</td>
+<td align="right">151.21512</td>
+<td align="right">9</td>
+<td align="left">Sydney Opera House, 2 Macquarie Street, Sydney NSW
+2000, Australia</td>
+<td align="right">-33.85630</td>
+<td align="right">151.21589</td>
+<td align="right">-33.85793</td>
+<td align="right">151.21443</td>
+<td align="left">AU</td>
+<td align="left">AUS</td>
+<td align="left">AU-NSW</td>
+<td align="left">outdoors/recreation</td>
+<td align="left">Sydney</td>
+<td align="left">arts_centre</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Sydney</td>
+<td align="left">Oceania</td>
+<td align="left">Australia</td>
+<td align="left">au</td>
+<td align="left">Quay Quarter</td>
+<td align="left">2000</td>
+<td align="left">Macquarie Street</td>
+<td align="left">New South Wales</td>
+<td align="left">NSW</td>
+<td align="left">Sydney</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Sydney Opera House</td>
+<td align="left">2</td>
+</tr>
+</tbody>
+</table>
+<p>You can also pass a data frame to <code>oc_forward_df()</code>. By
+default the results columns are added to the input data frame, which is
+useful for keeping information associated with the place names that are
+in separate columns. If you want a data frame with only the geocoding
+results, set <code>bind_cols = FALSE</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>concert_df <span class="ot">&lt;-</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">location =</span> <span class="fu">c</span>(<span class="st">&quot;Elbphilharmonie&quot;</span>, <span class="st">&quot;Concertgebouw&quot;</span>, <span class="st">&quot;Suntory Hall&quot;</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="fu">oc_forward_df</span>(<span class="at">data =</span> concert_df, <span class="at">placename =</span> location)</span></code></pre></div>
+<table>
+<colgroup>
+<col width="14%" />
+<col width="7%" />
+<col width="9%" />
+<col width="68%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">location</th>
+<th align="right">oc_lat</th>
+<th align="right">oc_lng</th>
+<th align="left">oc_formatted</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Elbphilharmonie</td>
+<td align="right">53.54129</td>
+<td align="right">9.984206</td>
+<td align="left">Elbe Philharmonic Hall, Platz der Deutschen Einheit 1,
+20457 Hamburg, Germany</td>
+</tr>
+<tr class="even">
+<td align="left">Concertgebouw</td>
+<td align="right">52.35620</td>
+<td align="right">4.879045</td>
+<td align="left">Concertgebouw, Concertgebouwplein 2, 1071 LN Amsterdam,
+Netherlands</td>
+</tr>
+<tr class="odd">
+<td align="left">Suntory Hall</td>
+<td align="right">35.66671</td>
+<td align="right">139.741270</td>
+<td align="left">Suntory Hall, 1, Akasaka 1, Minato, Tokyo 107-0052,
+Japan</td>
+</tr>
+</tbody>
+</table>
 <p>You can use it in a piped workflow as well.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>concert_df <span class="sc">%&gt;%</span> <span class="fu">oc_forward_df</span>(location)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 x 4</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   location        oc_lat oc_lng oc_formatted                                                                 </span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;            &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;                                                                        </span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Elbphilharmonie   53.5   9.98 Elbe Philharmonic Hall, Platz der Deutschen Einheit 1, 20457 Hamburg, Germany</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 Concertgebouw     52.4   4.88 Concertgebouw, Concertgebouwplein 2, 1071 LN Amsterdam, Netherlands          </span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Suntory Hall      35.7 140.   Suntory Hall, Karayan Plaza, Azabu, Minato, Japan</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">library</span>(dplyr, <span class="at">warn.conflicts =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>concert_df <span class="sc">%&gt;%</span> <span class="fu">oc_forward_df</span>(location)</span></code></pre></div>
+<table>
+<colgroup>
+<col width="14%" />
+<col width="7%" />
+<col width="9%" />
+<col width="68%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">location</th>
+<th align="right">oc_lat</th>
+<th align="right">oc_lng</th>
+<th align="left">oc_formatted</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Elbphilharmonie</td>
+<td align="right">53.54129</td>
+<td align="right">9.984206</td>
+<td align="left">Elbe Philharmonic Hall, Platz der Deutschen Einheit 1,
+20457 Hamburg, Germany</td>
+</tr>
+<tr class="even">
+<td align="left">Concertgebouw</td>
+<td align="right">52.35620</td>
+<td align="right">4.879045</td>
+<td align="left">Concertgebouw, Concertgebouwplein 2, 1071 LN Amsterdam,
+Netherlands</td>
+</tr>
+<tr class="odd">
+<td align="left">Suntory Hall</td>
+<td align="right">35.66671</td>
+<td align="right">139.741270</td>
+<td align="left">Suntory Hall, 1, Akasaka 1, Minato, Tokyo 107-0052,
+Japan</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="reverse-geocoding" class="section level2">
 <h2>Reverse geocoding</h2>
-<p>Reverse geocoding works in the opposite direction of forward geocoding: from a pair of coordinates to the name and address most appropriate for the coordinates.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_reverse_df</span>(<span class="at">latitude =</span> <span class="fl">51.5034070</span>, <span class="at">longitude =</span> <span class="sc">-</span><span class="fl">0.1275920</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 3</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   latitude longitude oc_formatted                                                                            </span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;                                                                                   </span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     51.5    -0.128 Prime Minister’s Office, Westminster, 10 Downing Street, London SW1A 2AA, United Kingdom</span></span></code></pre></div>
-<p>Note that all coordinates sent to the OpenCage API must adhere to the <a href="https://en.wikipedia.org/wiki/World_Geodetic_System">WGS 84</a> (also known as <a href="https://epsg.io/4326">EPSG:4326</a>) <a href="https://en.wikipedia.org/wiki/Spatial_reference_system">coordinate reference system</a> in decimal format. This is the coordinate reference system used by the <a href="https://en.wikipedia.org/wiki/Global_Positioning_System">Global Positioning System</a>. There is usually no reason to send more than six or seven digits past the decimal. Any further precision gets to the <a href="https://en.wikipedia.org/wiki/Decimal_degrees">level of a centimeter</a>.</p>
-<p>Like <code>oc_forward_df()</code>, <code>oc_reverse_df()</code> is vectorised, can work with numeric vectors and data frames, supports the <code>output = &quot;all&quot;</code> argument and can be used with the {magrittr} pipe.</p>
-<p>OpenCage only returns at most <a href="https://opencagedata.com/api#ranking">one result</a> per reverse geocoding request.</p>
+<p>Reverse geocoding works in the opposite direction of forward
+geocoding: from a pair of coordinates to the name and address most
+appropriate for the coordinates.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">oc_reverse_df</span>(<span class="at">latitude =</span> <span class="fl">51.5034070</span>, <span class="at">longitude =</span> <span class="sc">-</span><span class="fl">0.1275920</span>)</span></code></pre></div>
+<table>
+<colgroup>
+<col width="12%" />
+<col width="14%" />
+<col width="73%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">latitude</th>
+<th align="right">longitude</th>
+<th align="left">oc_formatted</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">51.50341</td>
+<td align="right">-0.127592</td>
+<td align="left">10 Downing Street, London, SW1A 2AA, United
+Kingdom</td>
+</tr>
+</tbody>
+</table>
+<p>Note that all coordinates sent to the OpenCage API must adhere to the
+<a href="https://en.wikipedia.org/wiki/World_Geodetic_System">WGS 84</a>
+(also known as <a href="https://epsg.io/4326">EPSG:4326</a>) <a href="https://en.wikipedia.org/wiki/Spatial_reference_system">coordinate
+reference system</a> in decimal format. This is the coordinate reference
+system used by the <a href="https://en.wikipedia.org/wiki/Global_Positioning_System">Global
+Positioning System</a>. There is usually no reason to send more than six
+or seven digits past the decimal. Any further precision gets to the <a href="https://en.wikipedia.org/wiki/Decimal_degrees">level of a
+centimeter</a>.</p>
+<p>Like <code>oc_forward_df()</code>, <code>oc_reverse_df()</code> is
+vectorised, can work with numeric vectors and data frames, supports the
+<code>output = &quot;all&quot;</code> argument and can be used with the {magrittr}
+pipe.</p>
+<p>OpenCage only returns at most <a href="https://opencagedata.com/api#ranking">one result</a> per reverse
+geocoding request.</p>
 </div>
 <div id="caching" class="section level2">
 <h2>Caching</h2>
-<p>OpenCage <a href="https://opencagedata.com/api#caching">allows and supports caching</a>. To minimize the number of requests sent to the API {opencage} uses {<a href="https://github.com/r-lib/memoise">memoise</a>} to cache results inside the active R session.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">oc_reverse</span>(<span class="at">latitude =</span> <span class="dv">10</span>, <span class="at">longitude =</span> <span class="dv">10</span>))</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0.03    0.00    0.92</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">oc_reverse</span>(<span class="at">latitude =</span> <span class="dv">10</span>, <span class="at">longitude =</span> <span class="dv">10</span>))</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0.01    0.00    0.02</span></span></code></pre></div>
-<p>To clear the cache of all results either start a new R session or call <code>oc_clear_cache()</code>.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">oc_clear_cache</span>()</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">oc_reverse</span>(<span class="at">latitude =</span> <span class="dv">10</span>, <span class="at">longitude =</span> <span class="dv">10</span>))</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    user  system elapsed </span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0.00    0.00    0.92</span></span></code></pre></div>
-<p>As you probably know, cache invalidation is one of the harder things to do in computer science. Therefore {opencage} only supports invalidating the whole cache and not individual records at the moment.</p>
+<p>OpenCage <a href="https://opencagedata.com/api#caching">allows and
+supports caching</a>. To minimize the number of requests sent to the API
+{opencage} uses {<a href="https://github.com/r-lib/memoise">memoise</a>}
+to cache results inside the active R session.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">oc_reverse</span>(<span class="at">latitude =</span> <span class="dv">10</span>, <span class="at">longitude =</span> <span class="dv">10</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt;    user  system elapsed </span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt;    0.02    0.00    0.95</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">oc_reverse</span>(<span class="at">latitude =</span> <span class="dv">10</span>, <span class="at">longitude =</span> <span class="dv">10</span>))</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt;    user  system elapsed </span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt;    0.01    0.00    0.01</span></span></code></pre></div>
+<p>To clear the cache of all results either start a new R session or
+call <code>oc_clear_cache()</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">oc_clear_cache</span>()</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="fu">system.time</span>(<span class="fu">oc_reverse</span>(<span class="at">latitude =</span> <span class="dv">10</span>, <span class="at">longitude =</span> <span class="dv">10</span>))</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt;    user  system elapsed </span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt;    0.02    0.00    0.91</span></span></code></pre></div>
+<p>As you probably know, cache invalidation is one of the harder things
+to do in computer science. Therefore {opencage} only supports
+invalidating the whole cache and not individual records at the
+moment.</p>
 <p>The underlying data at OpenCage is <a href="https://opencagedata.com/faq#general">updated daily</a>.</p>
 </div>
 <div id="further-information" class="section level2">
 <h2>Further information</h2>
-<p>OpenCage supports a lot of parameters to either target your search area more specifically or to specify what additional information you need. See the <a href="customise_query.html">“Customise your query”</a> vignette for details.</p>
-<p>Besides <code>oc_forward_df()</code> and <code>oc_reverse_df()</code>, which always return a single tibble, {opencage} has two sibling functions — <code>oc_forward()</code> and <code>oc_reverse()</code> — which can be used to return types of output. Depending on what you specify as the <code>return</code> parameter, <code>oc_forward()</code> and <code>oc_reverse()</code> will return either a list of tibbles (<code>df_list</code>, the default), JSON lists (<code>json_list</code>), GeoJSON lists (<code>geojson_list</code>), or the URL with which the API would be called (<code>url_only</code>). Learn more in the <a href="output_options.html">“Output options”</a> vignette.</p>
-<p>Please report any issues or bugs on <a href="https://github.com/ropensci/opencage/issues">our GitHub repository</a> and post questions on <a href="https://discuss.ropensci.org">discuss.ropensci.org</a>.</p>
+<p>OpenCage supports a lot of parameters to either target your search
+area more specifically or to specify what additional information you
+need. See the <a href="customise_query.html">“Customise your query”</a>
+vignette for details.</p>
+<p>Besides <code>oc_forward_df()</code> and
+<code>oc_reverse_df()</code>, which always return a single tibble,
+{opencage} has two sibling functions — <code>oc_forward()</code> and
+<code>oc_reverse()</code> — which can be used to return types of output.
+Depending on what you specify as the <code>return</code> parameter,
+<code>oc_forward()</code> and <code>oc_reverse()</code> will return
+either a list of tibbles (<code>df_list</code>, the default), JSON lists
+(<code>json_list</code>), GeoJSON lists (<code>geojson_list</code>), or
+the URL with which the API would be called (<code>url_only</code>).
+Learn more in the <a href="output_options.html">“Output options”</a>
+vignette.</p>
+<p>Please report any issues or bugs on <a href="https://github.com/ropensci/opencage/issues">our GitHub
+repository</a>.</p>
 </div>
 
 

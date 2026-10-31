@@ -15,13 +15,15 @@ NULL
 #'
 #' @description
 #'
-#' `r lifecycle::badge("soft-deprecated")`
+#' `r lifecycle::badge("deprecated")`
 #'
-#' Soft deprecated: use `oc_forward` or `oc_forward_df` for forward geocoding.
+#' Deprecated: use `oc_forward` or `oc_forward_df` for forward geocoding.
 #'
 #' @param key Your OpenCage API key as a character vector of length one. By
 #'   default, [opencage_key()] will attempt to retrieve the key from the
 #'   environment variable `OPENCAGE_KEY`.
+#' @param min_confidence `r lifecycle::badge("defunct")` `min_confidence` is
+#'   no longer supported by the OpenCage API.
 #' @param no_record Logical vector of length one (default `FALSE`), when `TRUE`
 #'   no log entry of the query is created, and the geocoding request is not
 #'   cached by OpenCage.
@@ -47,18 +49,20 @@ NULL
 #'                               Deutschland")
 #'
 opencage_forward <-
-  function(placename,
-           key = opencage_key(),
-           bounds = NULL,
-           countrycode = NULL,
-           language = NULL,
-           limit = 10L,
-           min_confidence = NULL,
-           no_annotations = FALSE,
-           no_dedupe = FALSE,
-           no_record = FALSE,
-           abbrv = FALSE,
-           add_request = TRUE) {
+  function(
+    placename,
+    key = opencage_key(),
+    bounds = NULL,
+    countrycode = NULL,
+    language = NULL,
+    limit = 10L,
+    min_confidence = NULL,
+    no_annotations = FALSE,
+    no_dedupe = FALSE,
+    no_record = FALSE,
+    abbrv = FALSE,
+    add_request = TRUE
+  ) {
     if (length(placename) > 1) {
       stop(
         call. = FALSE,
@@ -66,7 +70,16 @@ opencage_forward <-
       )
     }
 
-    lifecycle::deprecate_soft("0.2.0", "opencage_forward()", "oc_forward()")
+    lifecycle::deprecate_warn("0.2.0", "opencage_forward()", "oc_forward()")
+
+    # fail if `min_confidence` is provided
+    if (!is.null(min_confidence)) {
+      lifecycle::deprecate_stop(
+        when = "0.3.0",
+        what = "opencage_forward(min_confidence)",
+        details = "The OpenCage API does not support the `min_confidence` parameter anymore." # nolint: line_length_linter.
+      )
+    }
 
     # set key and no_record option locally,
     # i.e. go back to default after function is finished
@@ -80,7 +93,6 @@ opencage_forward <-
       countrycode = countrycode,
       language = language,
       limit = limit,
-      min_confidence = min_confidence,
       no_annotations = no_annotations,
       no_dedupe = no_dedupe,
       abbrv = abbrv,
@@ -95,9 +107,9 @@ opencage_forward <-
 #'
 #' @description
 #'
-#' `r lifecycle::badge("soft-deprecated")`
+#' `r lifecycle::badge("deprecated")`
 #'
-#' Soft deprecated: use `oc_reverse` or `oc_reverse_df` for reverse geocoding.
+#' Deprecated: use `oc_reverse` or `oc_reverse_df` for reverse geocoding.
 #'
 #' @param bounds Bounding box, ignored for reverse geocoding.
 #' @param countrycode Country code, ignored for reverse geocoding.
@@ -117,19 +129,21 @@ opencage_forward <-
 #' )
 #'
 opencage_reverse <-
-  function(latitude,
-           longitude,
-           key = opencage_key(),
-           bounds = NULL,
-           countrycode = NULL,
-           language = NULL,
-           limit = 10,
-           min_confidence = NULL,
-           no_annotations = FALSE,
-           no_dedupe = FALSE,
-           no_record = FALSE,
-           abbrv = FALSE,
-           add_request = TRUE) {
+  function(
+    latitude,
+    longitude,
+    key = opencage_key(),
+    bounds = NULL,
+    countrycode = NULL,
+    language = NULL,
+    limit = 10,
+    min_confidence = NULL,
+    no_annotations = FALSE,
+    no_dedupe = FALSE,
+    no_record = FALSE,
+    abbrv = FALSE,
+    add_request = TRUE
+  ) {
     if (length(latitude) > 1) {
       stop(
         call. = FALSE,
@@ -137,7 +151,16 @@ opencage_reverse <-
       )
     }
 
-    lifecycle::deprecate_soft("0.2.0", "opencage_reverse()", "oc_reverse()")
+    lifecycle::deprecate_warn("0.2.0", "opencage_reverse()", "oc_reverse()")
+
+    # fail if `min_confidence` is provided
+    if (!is.null(min_confidence)) {
+      lifecycle::deprecate_stop(
+        when = "0.3.0",
+        what = "opencage_reverse(min_confidence)",
+        details = "The OpenCage API does not support the `min_confidence` parameter anymore." # nolint: line_length_linter.
+      )
+    }
 
     # set key and no_record option locally,
     # i.e. go back to default after function is finished
@@ -150,7 +173,6 @@ opencage_reverse <-
       return = "json_list",
       language = language,
       limit = limit,
-      min_confidence = min_confidence,
       no_annotations = no_annotations,
       no_dedupe = no_dedupe,
       abbrv = abbrv,
@@ -170,15 +192,14 @@ opencage_format <- function(lst) {
     results <- lapply(results, t)
     results <- lapply(results, as.data.frame, stringsAsFactors = FALSE)
     results <- suppressWarnings(dplyr::bind_rows(results))
-    results$"geometry.lat" <- as.numeric(results$"geometry.lat") # nolint snake_case not backward compatible
-    results$"geometry.lng" <- as.numeric(results$"geometry.lng") # nolint snake_case not backward compatible
+    results$"geometry.lat" <- as.numeric(results$"geometry.lat")
+    results$"geometry.lng" <- as.numeric(results$"geometry.lng")
 
     # if requests exists in the api response add the query to results
     if ("request" %in% names(lst)) {
       results$query <- as.character(lst$request$query)
     }
-  }
-  else {
+  } else {
     results <- NULL
   }
 
@@ -211,9 +232,9 @@ opencage_format <- function(lst) {
 #'
 #' @description
 #'
-#' `r lifecycle::badge("soft-deprecated")`
+#' `r lifecycle::badge("deprecated")`
 #'
-#' Soft-deprecated and will be removed from the package together with
+#' Deprecated and will be removed from the package together with
 #' `opencage_forward()` and `opencage_reverse()`.
 #'
 #' Retrieves the OpenCage API Key from the environment variable `OPENCAGE_KEY`.
@@ -223,7 +244,7 @@ opencage_format <- function(lst) {
 #' @keywords internal
 #' @export
 opencage_key <- function(quiet = TRUE) {
-  lifecycle::deprecate_soft("0.2.0", "opencage_key()")
+  lifecycle::deprecate_warn("0.2.0", "opencage_key()")
 
   pat <- Sys.getenv("OPENCAGE_KEY")
 

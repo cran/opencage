@@ -2,7 +2,7 @@
 #'
 #' This function processes all geocoding requests issued by [oc_forward()] and
 #' [oc_reverse()] by calling the respective functions (after the query arguments
-#' have been checked by [oc_check_query()]). It builds the URL, fetches the
+#' have been checked by `oc_check_query()`). It builds the URL, fetches the
 #' results, checks the status of the returned results and finally parses them.
 #'
 #' @param limit The maximum number of results that should be returned. Integer
@@ -32,16 +32,16 @@ oc_process <-
     countrycode = NULL,
     language = NULL,
     limit = 1L,
-    min_confidence = NULL,
     no_annotations = TRUE,
     roadinfo = FALSE,
     no_dedupe = FALSE,
     abbrv = FALSE,
+    address_only = FALSE,
     add_request = FALSE
   ) {
-
     # get key
     key <- Sys.getenv("OPENCAGE_KEY")
+    oc_check_key(key)
 
     # get & check no_record
     no_record <- getOption("oc_no_record", default = TRUE)
@@ -67,11 +67,11 @@ oc_process <-
           countrycode = countrycode,
           language = language,
           limit = limit,
-          min_confidence = min_confidence,
           no_annotations = no_annotations,
           roadinfo = roadinfo,
           no_dedupe = no_dedupe,
           abbrv = abbrv,
+          address_only = address_only,
           add_request = add_request
         )
       )
@@ -87,26 +87,29 @@ oc_process <-
   }
 
 .oc_process <-
-  function(placename = NULL,
-           latitude = NULL,
-           longitude = NULL,
-           key = NULL,
-           return = NULL,
-           bounds = NULL,
-           proximity = NULL,
-           countrycode = NULL,
-           language = NULL,
-           limit = NULL,
-           min_confidence = NULL,
-           no_annotations = NULL,
-           roadinfo = FALSE,
-           no_dedupe = NULL,
-           no_record = NULL,
-           abbrv = NULL,
-           add_request = NULL,
-           pb = NULL) {
-
-    if (!is.null(pb)) pb$tick()
+  function(
+    placename = NULL,
+    latitude = NULL,
+    longitude = NULL,
+    key = NULL,
+    return = NULL,
+    bounds = NULL,
+    proximity = NULL,
+    countrycode = NULL,
+    language = NULL,
+    limit = NULL,
+    no_annotations = NULL,
+    roadinfo = NULL,
+    no_dedupe = NULL,
+    no_record = NULL,
+    abbrv = NULL,
+    address_only = NULL,
+    add_request = NULL,
+    pb = NULL
+  ) {
+    if (!is.null(pb)) {
+      pb$tick()
+    }
 
     # define endpoint
     if (return == "geojson_list") {
@@ -117,19 +120,15 @@ oc_process <-
 
     # define query
     if (!is.null(placename)) {
-      if (!is.na(placename)) {
-        query <- placename
-      } else {
-        # convert NA's to an empty query to not return bogus results
-        query <- ""
-      }
+      query <- placename
     }
     if (!is.null(latitude)) {
       if (!is.na(latitude) && !is.na(longitude)) {
         query <- paste(latitude, longitude, sep = ",")
       } else {
-        # convert NA's to an empty query to not return bogus results
-        query <- ""
+        # set query to NA (and do not send it to the API)
+        # if either latitude or longitude is NA
+        query <- NA_character_
       }
     }
 
@@ -142,12 +141,12 @@ oc_process <-
         countrycode = countrycode,
         language = language,
         limit = limit,
-        min_confidence = min_confidence,
         no_annotations = as.integer(no_annotations),
         roadinfo = as.integer(roadinfo),
         no_dedupe = as.integer(no_dedupe),
         no_record = as.integer(no_record),
         abbrv = as.integer(abbrv),
+        address_only = as.integer(address_only),
         add_request = as.integer(add_request),
         key = key
       ),
@@ -158,7 +157,7 @@ oc_process <-
     if (return == "url_only") {
       if (
         is.null(key) ||
-        (rlang::is_interactive() && isTRUE(getOption("oc_show_key", FALSE)))
+          (rlang::is_interactive() && isTRUE(getOption("oc_show_key", FALSE)))
       ) {
         return(oc_url)
       } else {
@@ -166,15 +165,198 @@ oc_process <-
       }
     }
 
-    # get response
-    res_env <- oc_get_memoise(oc_url)
+    # send query to API if not NA, else return (fake) empty res_text
+    if (!is.na(query) && nchar(query) >= 2) {
+      # get response
+      res_env <- oc_get_memoise(oc_url)
 
-    # parse response
-    res_text <- oc_parse_text(res_env)
+      # parse response
+      res_text <- oc_parse_text(res_env)
 
-    # check status message
-    oc_check_status(res_env, res_text)
+      # check status message
+      oc_check_status(res_env, res_text)
+    } else {
+      # Fake 0 results response
+
+      if (identical(return, "geojson_list")) {
+        res_text <-
+          "{\"features\":[],\"total_results\":0,\"type\":\"FeatureCollection\"}"
+      } else {
+        request_json <-
+          if (add_request) {
+            "\"request\":{\"add_request\":1,\"query\":[]}, "
+          } else {
+            ""
+          }
+
+        res_text <-
+          paste0("{", request_json, "\"results\":[],\"total_results\":0}")
+      }
+    }
 
     # format output
     oc_format(res_text = res_text, return = return, query = query)
+  }
+
+
+#' Build query URL
+#'
+#' @param query_par A list of query parameters
+#' @param endpoint The endpoint to query ("json" or "geojson")
+#'
+#' @return A character string URL
+#' @noRd
+
+oc_build_url <- function(query_par, endpoint) {
+  query_par <- purrr::compact(query_par)
+  query_par <- purrr::discard(query_par, .p = anyNA)
+
+  if ("countrycode" %in% names(query_par)) {
+    query_par$countrycode <-
+      tolower(paste(query_par$countrycode, collapse = ","))
+  }
+
+  if (!is.null(query_par$bounds)) {
+    bounds <- query_par$bounds
+    query_par$bounds <- paste(
+      bounds[1],
+      bounds[2],
+      bounds[3],
+      bounds[4],
+      sep = ","
+    )
+  }
+
+  if (!is.null(query_par$proximity)) {
+    proximity <- query_par$proximity
+    query_par$proximity <- paste(
+      proximity["latitude"],
+      proximity["longitude"],
+      sep = ","
+    )
+  }
+
+  oc_path <- paste0("geocode/v1/", endpoint)
+
+  crul::url_build(
+    url = "https://api.opencagedata.com",
+    path = oc_path,
+    query = query_par
+  )
+}
+
+
+#' GET request from OpenCage
+#'
+#' @param oc_url character string URL with query parameters, built with
+#'   `oc_build_url()`
+#'
+#' @return crul::HttpResponse object
+#' @noRd
+
+oc_get <- function(oc_url) {
+  client <- crul::HttpClient$new(
+    url = oc_url,
+    headers = list(`User-Agent` = oc_ua_string)
+  )
+  client$get()
+}
+
+# user-agent string: this is set at build-time, but that should be okay,
+# since the version number is too.
+oc_ua_string <-
+  paste0(
+    "<https://github.com/ropensci/opencage>, version ",
+    utils::packageVersion("opencage")
+  )
+
+
+#' Parse HttpResponse object to character string
+#'
+#' @param res crul::HttpResponse object
+#'
+#' @return character string (depending on queried endpoint, json or geojson)
+#' @noRd
+
+oc_parse_text <- function(res) {
+  text <- res$parse(encoding = "UTF-8")
+  if (identical(text, "")) {
+    stop("OpenCage returned an empty response.", call. = FALSE)
+  }
+  text
+}
+
+
+#' Check the status of the HttpResponse
+#'
+#' @param res_env crul::HttpResponse object
+#' @param res_text parsed HttpResponse
+#'
+#' @return NULL if status code less than or equal to 201, else `stop()`
+#' @noRd
+
+oc_check_status <- function(res_env, res_text) {
+  if (res_env$success()) {
+    return(invisible())
+  }
+  message <-
+    jsonlite::fromJSON(
+      res_text,
+      simplifyVector = TRUE,
+      flatten = TRUE
+    )$status$message
+  stop("HTTP failure: ", res_env$status_code, "\n", message, call. = FALSE)
+}
+
+
+#' Format the result string
+#'
+#' @param res_text parsed HttpResponse
+#' @param return character, which type of object to return (`df_list`,
+#'   `json_list`, `geojson_list`)
+#' @param query query string ("placename" or "latitude,longitude")
+#'
+#' @return A list of tibbles, json lists or geojson_lists
+#' @noRd
+
+oc_format <- function(res_text, return, query) {
+  if (return == "df_list") {
+    jsn <- jsonlite::fromJSON(res_text, simplifyVector = TRUE, flatten = TRUE)
+    if (identical(jsn$total_results, 0L)) {
+      # in oc_forward_df we rely on oc_lat, oc_lng, oc_formatted to be present
+      results <-
+        tibble::tibble(
+          oc_lat = NA_real_,
+          oc_lng = NA_real_,
+          oc_formatted = NA_character_
+        )
+    } else {
+      results <- tibble::as_tibble(jsn$results)
+      # Make column names nicer
+      colnames(results) <-
+        sub(
+          "^annotations\\.|^bounds\\.|^components\\.|^geometry\\.",
+          "",
+          colnames(results)
+        )
+      colnames(results) <- sub("^_", "", colnames(results)) # components:_type
+      colnames(results) <- gsub("\\.|-", "_", colnames(results))
+      results <-
+        rlang::set_names(results, ~ tolower(paste0("oc_", .)))
     }
+    if ("request" %in% names(jsn)) {
+      # add request directly, not from OpenCage roundtrip
+      tibble::add_column(results, oc_query = query, .before = 1)
+    } else {
+      results
+    }
+  } else if (return == "json_list" || return == "geojson_list") {
+    res_text_masked <- oc_mask_key(res_text)
+    jsn <- jsonlite::fromJSON(res_text_masked, simplifyVector = FALSE)
+    if (return == "geojson_list") {
+      structure(jsn, class = "geo_list")
+    } else {
+      jsn
+    }
+  }
+}

@@ -3,9 +3,9 @@
 test_that("oc_points works with numeric", {
   pnts1 <- oc_points(-5.6, 51.2)
   expect_type(pnts1, "list")
-  expect_is(pnts1[[1]], "numeric")
+  expect_type(pnts1[[1]], "double")
   expect_length(pnts1[[1]], 2)
-  expect_equal(unlist(pnts1), c(latitude = -5.6, longitude = 51.2))
+  expect_identical(unlist(pnts1), c(latitude = -5.6, longitude = 51.2))
   expect_output(
     object = print(pnts1),
     regexp = "latitude\\s+longitude\\s+\\n\\s+-5.6\\s+51.2"
@@ -15,18 +15,18 @@ test_that("oc_points works with numeric", {
 test_that("oc_points works with data.frame", {
   xdf <-
     data.frame(
-      y = c(54.0,  42.73),
+      y = c(54.0, 42.73),
       x = c(10.3, -78.81)
     )
 
   pnts2 <- oc_points(data = xdf, latitude = y, longitude = x)
   expect_type(pnts2, "list")
-  expect_is(pnts2[[1]], "numeric")
-  expect_is(pnts2[[2]], "numeric")
+  expect_type(pnts2[[1]], "double")
+  expect_type(pnts2[[2]], "double")
   expect_length(pnts2[[1]], 2)
   expect_length(pnts2[[2]], 2)
-  expect_equal(unlist(pnts2[1]), c(latitude = 54.0, longitude = 10.3))
-  expect_equal(unlist(pnts2[2]), c(latitude =  42.73, longitude = -78.81))
+  expect_identical(unlist(pnts2[1]), c(latitude = 54.0, longitude = 10.3))
+  expect_identical(unlist(pnts2[2]), c(latitude = 42.73, longitude = -78.81))
 })
 
 test_that("oc_points.default gives informative error message", {
@@ -34,7 +34,7 @@ test_that("oc_points.default gives informative error message", {
     object = oc_points("one", "two"),
     regexp = "Can't create a list of points",
     fixed = TRUE
-    )
+  )
 })
 
 # Test checks for oc_points -------------------------------------------------
@@ -46,7 +46,7 @@ test_that("oc_point checks point", {
   )
   expect_error(
     oc_points(-0.563160, "51.280430"),
-    "Every `point` must be a numeric vector."
+    "Every `longitude` must be numeric."
   )
   expect_error(
     oc_points(-0.563160, 51280430),

@@ -1,4 +1,4 @@
-## Test oc_check_query: error messages ##
+# Test oc_check_query() --------------------------------------------------
 
 test_that("oc_check_query checks placename", {
   expect_error(
@@ -6,18 +6,6 @@ test_that("oc_check_query checks placename", {
       placename = 222
     ),
     "`placename` must be a character vector."
-  )
-  expect_error(
-    oc_check_query(
-      placename = NA_character_
-    ),
-    "`placename` must not be NA or an empty string."
-  )
-  expect_error(
-    oc_check_query(
-      placename = ""
-    ),
-    "`placename` must not be NA or an empty string."
   )
 })
 
@@ -36,13 +24,6 @@ test_that("oc_check_query checks latitude", {
     ),
     "Every `latitude` must be between -90 and 90."
   )
-  expect_error(
-    oc_check_query(
-      latitude = NA_real_,
-      longitude = 51.11892
-    ),
-    "`latitude` must not be NA."
-  )
 })
 
 test_that("oc_check_query checks longitude", {
@@ -59,13 +40,6 @@ test_that("oc_check_query checks longitude", {
       longitude = 5111892
     ),
     "Every `longitude` must be between -180 and 180."
-  )
-  expect_error(
-    oc_check_query(
-      latitude = 43,
-      longitude = NA_real_
-    ),
-    "`longitude` must not be NA."
   )
 })
 
@@ -97,7 +71,7 @@ test_that("oc_check_query checks proximity", {
   expect_error(
     oc_check_query(
       placename = "Sarzeau",
-    proximity = list(c(1, 2, 3)) # too many coordinates
+      proximity = list(c(1, 2, 3)) # too many coordinates
     ),
     "Every `proximity` point must be a numeric vector of length 2."
   )
@@ -114,6 +88,22 @@ test_that("oc_check_query checks proximity", {
       proximity = c(1, 2) # not wrapped in a list
     ),
     "Every `proximity` point must be a numeric vector of length 2."
+  )
+  expect_error(
+    oc_check_query(
+      placename = "Sarzeau",
+      proximity = list(c(latitude = -91, longitude = 2))
+    ),
+    "Every `latitude` must be between -90 and 90.",
+    fixed = TRUE
+  )
+  expect_error(
+    oc_check_query(
+      placename = "Sarzeau",
+      proximity = list(c(latitude = 0, longitude = 181))
+    ),
+    "Every `longitude` must be between -180 and 180.",
+    fixed = TRUE
   )
 })
 
@@ -162,16 +152,6 @@ test_that("oc_check_query checks limit", {
   )
 })
 
-test_that("oc_check_query checks min_confidence", {
-  expect_error(
-    oc_check_query(
-      placename = "Sarzeau",
-      min_confidence = 20
-    ),
-    "`min_confidence` must be an integer between 1 and 10."
-  )
-})
-
 test_that("oc_check_query checks no_annotations", {
   expect_error(
     oc_check_query(
@@ -215,6 +195,16 @@ test_that("oc_check_query checks abbrv", {
       abbrv = "yes"
     ),
     "`abbrv` must be a logical vector."
+  )
+})
+
+test_that("oc_check_query checks address_only", {
+  expect_error(
+    oc_check_query(
+      placename = "Sarzeau",
+      address_only = "yes"
+    ),
+    "`address_only` must be a logical vector."
   )
 })
 
@@ -266,4 +256,25 @@ test_that("oc_check_logical checks no_record", {
       check_length_one = TRUE
     )
   )
+})
+
+# Test oc_check_between() -------------------------------------------------
+test_that("oc_check_between works", {
+  symbol <- 11
+  expect_snapshot(oc_check_between(symbol, 0, 10), error = TRUE)
+  expect_snapshot(oc_check_between(symbol, 11.0001, 11.0002), error = TRUE)
+  expect_silent(oc_check_between(symbol, 0, 11))
+
+  # integer
+  symbol <- 11L
+  expect_snapshot(oc_check_between(symbol, 0L, 10L), error = TRUE)
+  expect_snapshot(oc_check_between(symbol, 11.0001, 11.0002), error = TRUE)
+  expect_silent(oc_check_between(symbol, 0L, 11L))
+
+  # non-numeric
+  symbol <- "11"
+  expect_snapshot(oc_check_between(symbol, 0, 11), error = TRUE)
+
+  symbol <- "TRUE"
+  expect_snapshot(oc_check_between(symbol, 0, 11), error = TRUE)
 })

@@ -3,7 +3,7 @@
 #' Forward geocoding from a character vector of location names to latitude and
 #' longitude tuples.
 #'
-# nolint start - link longer than 80 chars
+# nolint start: line_length_linter.
 #' @param placename A character vector with the location names or addresses to
 #'   be geocoded.
 #'
@@ -44,12 +44,6 @@
 #' @param limit Numeric vector of integer values to determine the maximum number
 #'   of results returned for each `placename`. Integer values between 1 and 100
 #'   are allowed. Default is 10.
-#' @param min_confidence Numeric vector of integer values between 0 and 10
-#'   indicating the precision of the returned result as defined by its
-#'   geographical extent, (i.e. by the extent of the result's bounding box). See
-#'   the [API documentation](https://opencagedata.com/api#confidence) for
-#'   details. Only results with at least the requested confidence will be
-#'   returned. Default is `NULL`.
 #' @param no_annotations Logical vector indicating whether additional
 #'   information about the result location should be returned. `TRUE` by
 #'   default, which means that the results will not contain annotations.
@@ -61,6 +55,9 @@
 #' @param abbrv Logical vector (default `FALSE`), when `TRUE` addresses in the
 #'   `formatted` field of the results are abbreviated (e.g. "Main St." instead
 #'   of "Main Street").
+#' @param address_only Logical vector (default `FALSE`), when `TRUE` only the
+#'   address details are returned in the `formatted` field of the results, not
+#'   the name of a point-of-interest should there be one at this address.
 #' @param add_request Logical vector (default `FALSE`) indicating whether the
 #'   request is returned again with the results. If the `return` value is a
 #'   `df_list`, the query text is added as a column to the results. `json_list`
@@ -100,51 +97,70 @@
 #'
 #' # Use bounding box to help return accurate results
 #' # for each placename
-#' bounds <- oc_bbox(xmin = c(-2, 9, -119),
-#'                   ymin = c(47, 53, 34),
-#'                   xmax = c(0, 10, -117),
-#'                   ymax = c(48, 54, 35))
+#' bounds <- oc_bbox(
+#'   xmin = c(-2, 9, -119),
+#'   ymin = c(47, 53, 34),
+#'   xmax = c(0, 10, -117),
+#'   ymax = c(48, 54, 35)
+#' )
 #' oc_forward(placename = locations, bounds = bounds)
 #'
 #' # Another way to help specify the desired results
 #' # is with country codes.
-#' oc_forward(placename = locations,
-#'            countrycode = c("ca", "us", "co"))
+#' oc_forward(
+#'   placename = locations,
+#'   countrycode = c("ca", "us", "co")
+#' )
 #'
 #' # With multiple countrycodes per placename
-#' oc_forward(placename = locations,
-#'            countrycode = list(c("fr", "ca") , c("de", "us"), c("us", "co"))
-#'            )
+#' oc_forward(
+#'   placename = locations,
+#'   countrycode = list(c("fr", "ca"), c("de", "us"), c("us", "co"))
+#' )
 #'
 #' # Return results in a preferred language if possible
-#' oc_forward(placename = c("Brugge", "Mechelen", "Antwerp"),
-#'            language = "fr")
+#' oc_forward(
+#'   placename = c("Brugge", "Mechelen", "Antwerp"),
+#'   language = "fr"
+#' )
 #'
 #' # Limit the number of results per placename and return json_list
-#' oc_forward(placename = locations,
-#'            bounds = bounds,
-#'            limit = 1,
-#'            return = "json_list")
+#' oc_forward(
+#'   placename = locations,
+#'   bounds = bounds,
+#'   limit = 1,
+#'   return = "json_list"
+#' )
 #'
 oc_forward <-
-  function(placename,
-           return = c("df_list", "json_list", "geojson_list", "url_only"),
-           bounds = NULL,
-           proximity = NULL,
-           countrycode = NULL,
-           language = NULL,
-           limit = 10L,
-           min_confidence = NULL,
-           no_annotations = TRUE,
-           roadinfo = FALSE,
-           no_dedupe = FALSE,
-           abbrv = FALSE,
-           add_request = FALSE,
-           ...) {
-
+  function(
+    placename,
+    return = c("df_list", "json_list", "geojson_list", "url_only"),
+    bounds = NULL,
+    proximity = NULL,
+    countrycode = NULL,
+    language = NULL,
+    limit = 10L,
+    no_annotations = TRUE,
+    roadinfo = FALSE,
+    no_dedupe = FALSE,
+    abbrv = FALSE,
+    address_only = FALSE,
+    add_request = FALSE,
+    ...
+  ) {
     # check a placename is provided
     if (missing(placename) || is.null(placename)) {
       stop(call. = FALSE, "`placename` must be provided.")
+    }
+
+    # fail if `min_confidence` is provided
+    if (rlang::has_name(rlang::quos(...), "min_confidence")) {
+      lifecycle::deprecate_stop(
+        when = "0.3.0",
+        what = "oc_forward(min_confidence)",
+        details = "The OpenCage API does not support the `min_confidence` parameter anymore." # nolint: line_length_linter.
+      )
     }
 
     # check return
@@ -158,11 +174,11 @@ oc_forward <-
       countrycode = countrycode,
       language = language,
       limit = limit,
-      min_confidence = min_confidence,
       no_annotations = no_annotations,
       roadinfo = roadinfo,
       no_dedupe = no_dedupe,
       abbrv = abbrv,
+      address_only = address_only,
       add_request = add_request
     )
     # process request
@@ -174,11 +190,11 @@ oc_forward <-
       countrycode = countrycode,
       language = language,
       limit = limit,
-      min_confidence = min_confidence,
       no_annotations = no_annotations,
       roadinfo = roadinfo,
       no_dedupe = no_dedupe,
       abbrv = abbrv,
+      address_only = address_only,
       add_request = add_request
     )
   }
@@ -190,7 +206,7 @@ oc_forward <-
 #' longitude tuples.
 #'
 #' @param data A data frame.
-# nolint start - link longer than 80 chars
+# nolint start: line_length_linter.
 #' @param placename An unquoted variable name of a character column or vector
 #'   with the location names or addresses to be geocoded.
 #'
@@ -235,13 +251,6 @@ oc_forward <-
 #'   of such a vector, to determine the maximum number of results returned for
 #'   each `placename`. Integer values between 1 and 100 are allowed. Default is
 #'   1.
-#' @param min_confidence Numeric vector of integer values, or an unquoted
-#'   variable name of such a vector, between 0 and 10 indicating the precision
-#'   of the returned result as defined by its geographical extent, (i.e. by the
-#'   extent of the result's bounding box). See the [API
-#'   documentation](https://opencagedata.com/api#confidence) for details. Only
-#'   results with at least the requested confidence will be returned. Default is
-#'   `NULL`).
 #' @param no_annotations Logical vector, or an unquoted variable name of such a
 #'   vector, indicating whether additional information about the result location
 #'   should be returned. `TRUE` by default, which means that the results will
@@ -256,6 +265,10 @@ oc_forward <-
 #' @param abbrv Logical vector, or an unquoted variable name of such a vector.
 #'   Default is `FALSE`. When `TRUE` addresses in the `oc_formatted` variable of
 #'   the results are abbreviated (e.g. "Main St." instead of "Main Street").
+#' @param address_only Logical vector, or an unquoted variable name of such a
+#'   vector. Default is `FALSE`. When `TRUE` only the address details are
+#'   returned in the `oc_formatted` variable of the results, not the name of a
+#'   point-of-interest should there be one at this address.
 #' @param ... Ignored.
 #'
 #' @return A tibble. Column names coming from the OpenCage API are prefixed with
@@ -271,8 +284,10 @@ oc_forward <-
 #' @examplesIf oc_key_present() && oc_api_ok()
 #'
 #' library(tibble)
-#' df <- tibble(id = 1:3,
-#'              locations = c("Nantes", "Hamburg", "Los Angeles"))
+#' df <- tibble(
+#'   id = 1:3,
+#'   locations = c("Nantes", "Hamburg", "Los Angeles")
+#' )
 #'
 #' # Return lat, lng, and formatted address
 #' oc_forward_df(df, placename = locations)
@@ -287,8 +302,10 @@ oc_forward <-
 #' oc_forward_df(df, placename = locations, limit = 5)
 #'
 #' # Restrict results to a given bounding box
-#' oc_forward_df(df, placename = locations,
-#'               bounds = oc_bbox(-5, 45, 15, 55))
+#' oc_forward_df(df,
+#'   placename = locations,
+#'   bounds = oc_bbox(-5, 45, 15, 55)
+#' )
 #'
 #' # oc_forward_df accepts unquoted column names for all
 #' # arguments except bind_cols and output.
@@ -296,27 +313,36 @@ oc_forward <-
 #' # through the data frame passed to the data argument.
 #'
 #' df2 <- add_column(df,
-#'   bounds = oc_bbox(xmin = c(-2, 9, -119),
-#'                    ymin = c(47, 53, 34),
-#'                    xmax = c(0, 10, -117),
-#'                    ymax = c(48, 54, 35)),
+#'   bounds = oc_bbox(
+#'     xmin = c(-2, 9, -119),
+#'     ymin = c(47, 53, 34),
+#'     xmax = c(0, 10, -117),
+#'     ymax = c(48, 54, 35)
+#'   ),
 #'   limit = 1:3,
 #'   countrycode = c("ca", "us", "co"),
-#'   language = c("fr", "de", "en"))
+#'   language = c("fr", "de", "en")
+#' )
 #'
 #' # Use the bounds column to help return accurate results and
 #' # language column to specify preferred language of results
-#' oc_forward_df(df2, placename = locations,
-#'               bounds = bounds,
-#'               language = language)
+#' oc_forward_df(df2,
+#'   placename = locations,
+#'   bounds = bounds,
+#'   language = language
+#' )
 #'
 #' # Different limit of results for each placename
-#' oc_forward_df(df2, placename = locations,
-#'               limit = limit)
+#' oc_forward_df(df2,
+#'   placename = locations,
+#'   limit = limit
+#' )
 #'
 #' # Specify the desired results by the countrycode column
-#' oc_forward_df(df2, placename = locations,
-#'               countrycode = countrycode)
+#' oc_forward_df(df2,
+#'   placename = locations,
+#'   countrycode = countrycode
+#' )
 #'
 oc_forward_df <- function(...) UseMethod("oc_forward_df")
 
@@ -333,39 +359,49 @@ oc_forward_df.default <- function(x, ...) {
 
 #' @rdname oc_forward_df
 #' @export
-oc_forward_df.data.frame <- # nolint - see lintr issue #223
-  function(data,
-           placename,
-           bind_cols = TRUE,
-           output = c("short", "all"),
-           bounds = NULL,
-           proximity = NULL,
-           countrycode = NULL,
-           language = NULL,
-           limit = 1L,
-           min_confidence = NULL,
-           no_annotations = TRUE,
-           roadinfo = FALSE,
-           no_dedupe = FALSE,
-           abbrv = FALSE,
-           ...) {
-
+oc_forward_df.data.frame <-
+  function(
+    data,
+    placename,
+    bind_cols = TRUE,
+    output = c("short", "all"),
+    bounds = NULL,
+    proximity = NULL,
+    countrycode = NULL,
+    language = NULL,
+    limit = 1L,
+    no_annotations = TRUE,
+    roadinfo = FALSE,
+    no_dedupe = FALSE,
+    abbrv = FALSE,
+    address_only = FALSE,
+    ...
+  ) {
     # Tidyeval to enable input from data frame columns
-    placename      <- rlang::enquo(placename)
-    bounds         <- rlang::enquo(bounds)
-    proximity      <- rlang::enquo(proximity)
-    countrycode    <- rlang::enquo(countrycode)
-    language       <- rlang::enquo(language)
-    limit          <- rlang::enquo(limit)
-    min_confidence <- rlang::enquo(min_confidence)
+    placename <- rlang::enquo(placename)
+    bounds <- rlang::enquo(bounds)
+    proximity <- rlang::enquo(proximity)
+    countrycode <- rlang::enquo(countrycode)
+    language <- rlang::enquo(language)
+    limit <- rlang::enquo(limit)
     no_annotations <- rlang::enquo(no_annotations)
-    roadinfo       <- rlang::enquo(roadinfo)
-    no_dedupe      <- rlang::enquo(no_dedupe)
-    abbrv          <- rlang::enquo(abbrv)
+    roadinfo <- rlang::enquo(roadinfo)
+    no_dedupe <- rlang::enquo(no_dedupe)
+    abbrv <- rlang::enquo(abbrv)
+    address_only <- rlang::enquo(address_only)
 
     # check a placename is provided
     if (rlang::quo_is_missing(placename) || rlang::quo_is_null(placename)) {
       stop(call. = FALSE, "`placename` must be provided.")
+    }
+
+    # fail if `min_confidence` is provided
+    if (rlang::has_name(rlang::quos(...), "min_confidence")) {
+      lifecycle::deprecate_stop(
+        when = "0.3.0",
+        what = "oc_forward_df(min_confidence)",
+        details = "The OpenCage API does not support the `min_confidence` parameter anymore." # nolint: line_length_linter.
+      )
     }
 
     output <- rlang::arg_match(output)
@@ -375,8 +411,10 @@ oc_forward_df.data.frame <- # nolint - see lintr issue #223
 
     # we assume that the user wants the entire output when annotations or
     # roadinfo are requested
-    if (any(rlang::eval_tidy(no_annotations, data = data) == FALSE) ||
-        any(rlang::eval_tidy(roadinfo, data = data) == TRUE)) {
+    if (
+      any(rlang::eval_tidy(no_annotations, data = data) == FALSE) ||
+        any(rlang::eval_tidy(roadinfo, data = data) == TRUE)
+    ) {
       output <- "all"
     }
 
@@ -389,11 +427,11 @@ oc_forward_df.data.frame <- # nolint - see lintr issue #223
         countrycode = rlang::eval_tidy(countrycode, data = data),
         language = rlang::eval_tidy(language, data = data),
         limit = rlang::eval_tidy(limit, data = data),
-        min_confidence = rlang::eval_tidy(min_confidence, data = data),
         no_annotations = rlang::eval_tidy(no_annotations, data = data),
         roadinfo = rlang::eval_tidy(roadinfo, data = data),
         no_dedupe = rlang::eval_tidy(no_dedupe, data = data),
         abbrv = rlang::eval_tidy(abbrv, data = data),
+        address_only = rlang::eval_tidy(address_only, data = data),
         add_request = add_request
       )
       results <- dplyr::bind_rows(results_list)
@@ -401,18 +439,18 @@ oc_forward_df.data.frame <- # nolint - see lintr issue #223
         results <-
           dplyr::select(
             results,
-            .data$oc_query,
-            .data$oc_lat,
-            .data$oc_lng,
-            .data$oc_formatted
+            "oc_query",
+            "oc_lat",
+            "oc_lng",
+            "oc_formatted"
           )
       } else {
         results <-
           dplyr::select(
             results,
-            .data$oc_query,
-            .data$oc_lat,
-            .data$oc_lng,
+            "oc_query",
+            "oc_lat",
+            "oc_lng",
             dplyr::everything()
           )
       }
@@ -420,52 +458,45 @@ oc_forward_df.data.frame <- # nolint - see lintr issue #223
       results_nest <-
         dplyr::mutate(
           data,
-          op =
-            oc_forward(
-              placename = !!placename,
-              return = "df_list",
-              bounds = !!bounds,
-              proximity = !!proximity,
-              countrycode = !!countrycode,
-              language = !!language,
-              limit = !!limit,
-              min_confidence = !!min_confidence,
-              no_annotations = !!no_annotations,
-              roadinfo = !!roadinfo,
-              no_dedupe = !!no_dedupe,
-              abbrv = !!abbrv,
-              add_request = add_request
-            )
+          op = oc_forward(
+            placename = !!placename,
+            return = "df_list",
+            bounds = !!bounds,
+            proximity = !!proximity,
+            countrycode = !!countrycode,
+            language = !!language,
+            limit = !!limit,
+            no_annotations = !!no_annotations,
+            roadinfo = !!roadinfo,
+            no_dedupe = !!no_dedupe,
+            abbrv = !!abbrv,
+            address_only = !!address_only,
+            add_request = add_request
+          )
         )
 
-      if (utils::packageVersion("tidyr") > "0.8.99") {
-        results <-
-          tidyr::unnest(results_nest, .data$op, names_repair = "unique")
-      } else {
-        results <- tidyr::unnest(results_nest, .data$op, .drop = FALSE)
-        # .drop = FALSE so other list columns are not dropped. Deprecated as of
-        # v1.0.0
-      }
+      results <-
+        tidyr::unnest(results_nest, "op", names_repair = "unique")
 
       if (output == "short") {
         results <-
           dplyr::select(
             results,
-            1:.data$oc_query,
-            .data$oc_lat,
-            .data$oc_lng,
-            .data$oc_formatted,
-            -.data$oc_query
+            1:"oc_query",
+            "oc_lat",
+            "oc_lng",
+            "oc_formatted",
+            -"oc_query"
           )
       } else {
         results <-
           dplyr::select(
             results,
-            1:.data$oc_query,
-            .data$oc_lat,
-            .data$oc_lng,
+            1:"oc_query",
+            "oc_lat",
+            "oc_lng",
             dplyr::everything(),
-            -.data$oc_query
+            -"oc_query"
           )
       }
     }
@@ -475,19 +506,21 @@ oc_forward_df.data.frame <- # nolint - see lintr issue #223
 #' @rdname oc_forward_df
 #' @export
 oc_forward_df.character <-
-  function(placename,
-           output = c("short", "all"),
-           bounds = NULL,
-           proximity = NULL,
-           countrycode = NULL,
-           language = NULL,
-           limit = 1L,
-           min_confidence = NULL,
-           no_annotations = TRUE,
-           roadinfo = FALSE,
-           no_dedupe = FALSE,
-           abbrv = FALSE,
-           ...) {
+  function(
+    placename,
+    output = c("short", "all"),
+    bounds = NULL,
+    proximity = NULL,
+    countrycode = NULL,
+    language = NULL,
+    limit = 1L,
+    no_annotations = TRUE,
+    roadinfo = FALSE,
+    no_dedupe = FALSE,
+    abbrv = FALSE,
+    address_only = FALSE,
+    ...
+  ) {
     xdf <- tibble::tibble(placename = placename)
     oc_forward_df(
       data = xdf,
@@ -499,10 +532,11 @@ oc_forward_df.character <-
       countrycode = countrycode,
       language = language,
       limit = limit,
-      min_confidence = min_confidence,
       no_annotations = no_annotations,
       roadinfo = roadinfo,
       no_dedupe = no_dedupe,
-      abbrv = abbrv
+      abbrv = abbrv,
+      address_only = address_only,
+      ...
     )
   }

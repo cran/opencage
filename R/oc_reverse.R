@@ -39,26 +39,31 @@
 #' oc_reverse(latitude = lat, longitude = lng)
 #'
 #' # Return results in a preferred language if possible
-#' oc_reverse(latitude = lat, longitude = lng,
-#'            language = "fr")
+#' oc_reverse(
+#'   latitude = lat, longitude = lng,
+#'   language = "fr"
+#' )
 #'
 #' # Return results as a json list
-#' oc_reverse(latitude = lat, longitude = lng,
-#'            return = "json_list")
+#' oc_reverse(
+#'   latitude = lat, longitude = lng,
+#'   return = "json_list"
+#' )
 #'
 oc_reverse <-
-  function(latitude,
-           longitude,
-           return = c("df_list", "json_list", "geojson_list", "url_only"),
-           language = NULL,
-           min_confidence = NULL,
-           no_annotations = TRUE,
-           roadinfo = FALSE,
-           no_dedupe = FALSE,
-           abbrv = FALSE,
-           add_request = FALSE,
-           ...) {
-
+  function(
+    latitude,
+    longitude,
+    return = c("df_list", "json_list", "geojson_list", "url_only"),
+    language = NULL,
+    no_annotations = TRUE,
+    roadinfo = FALSE,
+    no_dedupe = FALSE,
+    abbrv = FALSE,
+    address_only = FALSE,
+    add_request = FALSE,
+    ...
+  ) {
     # check latitude is provided
     if (missing(latitude) || is.null(latitude)) {
       stop(call. = FALSE, "`latitude` and `longitude` must be provided.")
@@ -66,6 +71,15 @@ oc_reverse <-
     # check longitude is provided
     if (missing(longitude) || is.null(longitude)) {
       stop(call. = FALSE, "`latitude` and `longitude` must be provided.")
+    }
+
+    # fail if `min_confidence` is provided
+    if (rlang::has_name(rlang::quos(...), "min_confidence")) {
+      lifecycle::deprecate_stop(
+        when = "0.3.0",
+        what = "oc_reverse(min_confidence)",
+        details = "The OpenCage API does not support the `min_confidence` parameter anymore." # nolint: line_length_linter.
+      )
     }
 
     # check return
@@ -76,11 +90,11 @@ oc_reverse <-
       latitude = latitude,
       longitude = longitude,
       language = language,
-      min_confidence = min_confidence,
       no_annotations = no_annotations,
       roadinfo = roadinfo,
       no_dedupe = no_dedupe,
       abbrv = abbrv,
+      address_only = address_only,
       add_request = add_request
     )
     # process request
@@ -89,11 +103,11 @@ oc_reverse <-
       longitude = longitude,
       return = return,
       language = language,
-      min_confidence = min_confidence,
       no_annotations = no_annotations,
       roadinfo = roadinfo,
       no_dedupe = no_dedupe,
       abbrv = abbrv,
+      address_only = address_only,
       add_request = add_request
     )
   }
@@ -123,37 +137,41 @@ oc_reverse <-
 #' @examplesIf oc_key_present() && oc_api_ok()
 #'
 #' library(tibble)
-#' df <- tibble(id = 1:4,
-#'              lat = c(-36.85007, 47.21864, 53.55034, 34.05369),
-#'              lng = c(174.7706, -1.554136, 10.000654, -118.242767))
+#' df <- tibble(
+#'   id = 1:4,
+#'   lat = c(-36.85007, 47.21864, 53.55034, 34.05369),
+#'   lng = c(174.7706, -1.554136, 10.000654, -118.242767)
+#' )
 #'
 #' # Return formatted address of lat/lng values
 #' oc_reverse_df(df, latitude = lat, longitude = lng)
 #'
 #' # Return more detailed information about the locations
-#' oc_reverse_df(df, latitude = lat, longitude = lng,
-#'               output = "all")
+#' oc_reverse_df(df,
+#'   latitude = lat, longitude = lng,
+#'   output = "all"
+#' )
 #'
 #' # Return results in a preferred language if possible
-#' oc_reverse_df(df, latitude = lat, longitude = lng,
-#'               language = "fr")
+#' oc_reverse_df(df,
+#'   latitude = lat, longitude = lng,
+#'   language = "fr"
+#' )
 #'
 #' # oc_reverse_df accepts unquoted column names for all
 #' # arguments except bind_cols and output.
 #' # This makes it possible to build up more detailed queries
 #' # through the data frame passed to the data argument.
-#'
 #' df2 <- add_column(df,
-#'                   language = c("en", "fr", "de", "en"),
-#'                   confidence = c(8, 10, 10, 10))
+#'   language = c("en", "fr", "de", "en")
+#' )
 #'
 #' # Use language column to specify preferred language of results
-#' # and confidence column to allow different confidence levels
-#' oc_reverse_df(df2, latitude = lat, longitude = lng,
-#'               language = language,
-#'               min_confidence = confidence)
+#' oc_reverse_df(df2,
+#'   latitude = lat, longitude = lng,
+#'   language = language
+#' )
 #'
-
 oc_reverse_df <- function(...) UseMethod("oc_reverse_df")
 
 #' @noRd
@@ -169,36 +187,48 @@ oc_reverse_df.default <- function(x, ...) {
 
 #' @rdname oc_reverse_df
 #' @export
-oc_reverse_df.data.frame <- # nolint - see lintr issue #223
-  function(data,
-           latitude,
-           longitude,
-           bind_cols = TRUE,
-           output = c("short", "all"),
-           language = NULL,
-           min_confidence = NULL,
-           roadinfo = FALSE,
-           no_annotations = TRUE,
-           no_dedupe = FALSE,
-           abbrv = FALSE,
-           ...) {
-
+oc_reverse_df.data.frame <-
+  function(
+    data,
+    latitude,
+    longitude,
+    bind_cols = TRUE,
+    output = c("short", "all"),
+    language = NULL,
+    roadinfo = FALSE,
+    no_annotations = TRUE,
+    no_dedupe = FALSE,
+    abbrv = FALSE,
+    address_only = FALSE,
+    ...
+  ) {
     # Tidyeval to enable input from data frame columns
-    latitude       <- rlang::enquo(latitude)
-    longitude      <- rlang::enquo(longitude)
-    language       <- rlang::enquo(language)
-    min_confidence <- rlang::enquo(min_confidence)
+    latitude <- rlang::enquo(latitude)
+    longitude <- rlang::enquo(longitude)
+    language <- rlang::enquo(language)
     no_annotations <- rlang::enquo(no_annotations)
-    roadinfo       <- rlang::enquo(roadinfo)
-    no_dedupe      <- rlang::enquo(no_dedupe)
-    abbrv          <- rlang::enquo(abbrv)
+    roadinfo <- rlang::enquo(roadinfo)
+    no_dedupe <- rlang::enquo(no_dedupe)
+    abbrv <- rlang::enquo(abbrv)
+    address_only <- rlang::enquo(address_only)
 
     # check latitude & longitude is provided
-    if (rlang::quo_is_missing(latitude) ||
+    if (
+      rlang::quo_is_missing(latitude) ||
         rlang::quo_is_missing(longitude) ||
         rlang::quo_is_null(latitude) ||
-        rlang::quo_is_null(longitude)) {
+        rlang::quo_is_null(longitude)
+    ) {
       stop(call. = FALSE, "`latitude` and `longitude` must be provided.")
+    }
+
+    # fail if `min_confidence` is provided
+    if (rlang::has_name(rlang::quos(...), "min_confidence")) {
+      lifecycle::deprecate_stop(
+        when = "0.3.0",
+        what = "oc_reverse_df(min_confidence)",
+        details = "The OpenCage API does not support the `min_confidence` parameter anymore." # nolint: line_length_linter.
+      )
     }
 
     output <- rlang::arg_match(output)
@@ -208,8 +238,10 @@ oc_reverse_df.data.frame <- # nolint - see lintr issue #223
 
     # we assume that the user wants the entire output when annotations or
     # roadinfo are requested
-    if (any(rlang::eval_tidy(no_annotations, data = data) == FALSE) ||
-        any(rlang::eval_tidy(roadinfo, data = data) == TRUE)) {
+    if (
+      any(rlang::eval_tidy(no_annotations, data = data) == FALSE) ||
+        any(rlang::eval_tidy(roadinfo, data = data) == TRUE)
+    ) {
       output <- "all"
     }
 
@@ -219,64 +251,57 @@ oc_reverse_df.data.frame <- # nolint - see lintr issue #223
         longitude = rlang::eval_tidy(longitude, data = data),
         return = "df_list",
         language = rlang::eval_tidy(language, data = data),
-        min_confidence = rlang::eval_tidy(min_confidence, data = data),
         no_annotations = rlang::eval_tidy(no_annotations, data = data),
         roadinfo = rlang::eval_tidy(roadinfo, data = data),
         no_dedupe = rlang::eval_tidy(no_dedupe, data = data),
         abbrv = rlang::eval_tidy(abbrv, data = data),
+        address_only = rlang::eval_tidy(address_only, data = data),
         add_request = add_request
       )
       results <- dplyr::bind_rows(results_list)
       if (output == "short") {
         results <-
-          dplyr::select(results, .data$oc_query, .data$oc_formatted)
+          dplyr::select(results, "oc_query", "oc_formatted")
       } else {
         results <-
-          dplyr::select(results, .data$oc_query, dplyr::everything())
+          dplyr::select(results, "oc_query", dplyr::everything())
       }
     } else {
       results_nest <-
         dplyr::mutate(
           data,
-          op =
-            oc_reverse(
-              latitude = !!latitude,
-              longitude = !!longitude,
-              return = "df_list",
-              language = !!language,
-              min_confidence = !!min_confidence,
-              no_annotations = !!no_annotations,
-              roadinfo = !!roadinfo,
-              no_dedupe = !!no_dedupe,
-              abbrv = !!abbrv,
-              add_request = add_request
-            )
+          op = oc_reverse(
+            latitude = !!latitude,
+            longitude = !!longitude,
+            return = "df_list",
+            language = !!language,
+            no_annotations = !!no_annotations,
+            roadinfo = !!roadinfo,
+            no_dedupe = !!no_dedupe,
+            abbrv = !!abbrv,
+            address_only = !!address_only,
+            add_request = add_request
+          )
         )
 
-      if (utils::packageVersion("tidyr") > "0.8.99") {
-        results <-
-          tidyr::unnest(results_nest, .data$op, names_repair = "unique")
-      } else {
-        results <- tidyr::unnest(results_nest, .data$op, .drop = FALSE)
-        # .drop = FALSE so other list columns are not dropped. Deprecated as of
-        # v1.0.0
-      }
+      results <-
+        tidyr::unnest(results_nest, "op", names_repair = "unique")
 
       if (output == "short") {
         results <-
           dplyr::select(
             results,
-            1:.data$oc_query,
-            .data$oc_formatted,
-            -.data$oc_query
+            1:"oc_query",
+            "oc_formatted",
+            -"oc_query"
           )
       } else {
         results <-
           dplyr::select(
             results,
-            1:.data$oc_query,
+            1:"oc_query",
             dplyr::everything(),
-            -.data$oc_query
+            -"oc_query"
           )
       }
     }
@@ -286,15 +311,17 @@ oc_reverse_df.data.frame <- # nolint - see lintr issue #223
 #' @rdname oc_reverse_df
 #' @export
 oc_reverse_df.numeric <-
-  function(latitude,
-           longitude,
-           output = c("short", "all"),
-           language = NULL,
-           min_confidence = NULL,
-           no_annotations = TRUE,
-           no_dedupe = FALSE,
-           abbrv = FALSE,
-           ...) {
+  function(
+    latitude,
+    longitude,
+    output = c("short", "all"),
+    language = NULL,
+    no_annotations = TRUE,
+    no_dedupe = FALSE,
+    abbrv = FALSE,
+    address_only = FALSE,
+    ...
+  ) {
     xdf <- tibble::tibble(latitude = latitude, longitude = longitude)
     oc_reverse_df(
       data = xdf,
@@ -303,9 +330,10 @@ oc_reverse_df.numeric <-
       bind_cols = TRUE,
       output = output,
       language = language,
-      min_confidence = min_confidence,
       no_annotations = no_annotations,
       no_dedupe = no_dedupe,
-      abbrv = abbrv
+      abbrv = abbrv,
+      address_only = address_only,
+      ...
     )
   }
